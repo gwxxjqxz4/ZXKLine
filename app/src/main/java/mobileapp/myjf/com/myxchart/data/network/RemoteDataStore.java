@@ -1,10 +1,10 @@
 package mobileapp.myjf.com.myxchart.data.network;
 
 
-import mobileapp.myjf.com.myxchart.data.entity.CommonEntity;
-import mobileapp.myjf.com.myxchart.data.entity.KLineList;
-import mobileapp.myjf.com.myxchart.data.entity.TimeLineData;
-import mobileapp.myjf.com.myxchart.data.entity.TimeLineList;
+import mobileapp.myjf.com.myxchart.data.entity.util.CommonEntity;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.KLineOriginal;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineOriginal;
 import rx.Observable;
 
 /**
@@ -24,12 +24,12 @@ public class RemoteDataStore implements DataStore {
     }
 
     @Override
-    public Observable<CommonEntity<TimeLineList<TimeLineData>>> getTimeLineData(String token, String list_start, String pageid) {
+    public Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> getTimeLineData(String token, String list_start, String pageid) {
         return apiService.getTimeLineData(token, list_start, pageid);
     }
 
     @Override
-    public Observable<KLineList> getKLineData(String url){
+    public Observable<KLineOriginal> getKLineData(String url){
         return apiService.getKLineData(url);
     }
 

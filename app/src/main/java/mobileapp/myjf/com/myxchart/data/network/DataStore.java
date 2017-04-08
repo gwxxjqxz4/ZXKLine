@@ -2,10 +2,10 @@ package mobileapp.myjf.com.myxchart.data.network;/**
  * Created by nethanhan on 2017/4/1.
  */
 
-import mobileapp.myjf.com.myxchart.data.entity.CommonEntity;
-import mobileapp.myjf.com.myxchart.data.entity.KLineList;
-import mobileapp.myjf.com.myxchart.data.entity.TimeLineData;
-import mobileapp.myjf.com.myxchart.data.entity.TimeLineList;
+import mobileapp.myjf.com.myxchart.data.entity.util.CommonEntity;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.KLineOriginal;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineOriginal;
 import rx.Observable;
 
 /**
@@ -13,7 +13,7 @@ import rx.Observable;
  */
 public interface DataStore {
 
-    Observable<KLineList> getKLineData(String url);
-    Observable<CommonEntity<TimeLineList<TimeLineData>>> getTimeLineData(String organizationCode, String productCode, String token);
+    Observable<KLineOriginal> getKLineData(String url);
+    Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> getTimeLineData(String organizationCode, String productCode, String token);
 
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?><!-- KTLine框架的整体布局，对应KTLineFragment -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 容纳标题栏的滚动条 -->
+    <HorizontalScrollView
+        android:id="@+id/hsv_pager_select"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:background="#eee"
+        android:scrollbars="none">
+
+        <!-- 标题栏，具体布局代码在ll_title中 -->
+        <include layout="@layout/ll_title" />
+
+    </HorizontalScrollView>
+
+    <!-- 用于容纳KT线图控件的相对布局 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 用于容纳分时图的相对布局 -->
+        <RelativeLayout
+            android:id="@+id/layout_timeline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="10dp"
+            android:visibility="visible">
+
+            <mobileapp.myjf.com.myxchart.render.data.TimeLineView
+                android:id="@+id/view_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <mobileapp.myjf.com.myxchart.render.background.TimeLineBackgroundView
+                android:id="@+id/background_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView
+                android:id="@+id/highlight_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+
+        </RelativeLayout>
+
+
+        <!-- 用于容纳K线图的线性布局 -->
+        <include layout="@layout/ll_kline" />
+
+    </RelativeLayout>
+
+</LinearLayout>

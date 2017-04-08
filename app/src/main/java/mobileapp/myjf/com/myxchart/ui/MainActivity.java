@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
      * @param view
      */
     public void goToKLine(View view){
-        Intent intent = new Intent(this,LineActivity.class);
+        Intent intent = new Intent(this,KTLineActivity.class);
         startActivity(intent);
     }
 }

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?><!-- K线图的布局文件，容纳了K线图的主图、副图、主图指标和副图指标，用于展示内容和处理触摸事件 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout_k_line"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="true"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:visibility="invisible">
+
+    <!-- 容纳主图指标按钮的布局，设置为线性布局方便之后添加新的指标 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <!-- 主图指标MA的按钮，暂时无需处理 -->
+        <TextView
+            android:layout_width="44dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="MA"
+            android:textSize="6sp" />
+
+    </LinearLayout>
+
+    <!-- K线主图布局，用于加载K线图控件 -->
+    <mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout
+        android:id="@+id/layout_main"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="60"
+        android:clickable="false">
+
+        <mobileapp.myjf.com.myxchart.render.data.KLineView
+            android:id="@+id/view_kline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <mobileapp.myjf.com.myxchart.render.background.KLineBackgroundView
+            android:id="@+id/background_kline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <mobileapp.myjf.com.myxchart.render.highlight.KLineHighLightView
+            android:id="@+id/highlight_kline"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout>
+
+    <!-- 容纳副图指标按钮的布局 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="8"
+        android:clickable="true"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="3dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_macd"
+            android:layout_width="44dp"
+            android:clickable="true"
+            android:layout_height="match_parent">
+
+            <!-- 副图指标MACD的按钮，点击渲染MACD指标 -->
+            <TextView
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="MACD"
+                android:textSize="8sp" />
+
+        </RelativeLayout>
+        <!-- 副图指标RSI的按钮，点击渲染RSI指标 -->
+        <RelativeLayout
+            android:id="@+id/rl_rsi"
+            android:layout_width="44dp"
+            android:clickable="true"
+            android:layout_height="match_parent">
+
+            <!-- 副图指标MACD的按钮，点击渲染MACD指标 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="RSI"
+                android:textSize="8sp" />
+
+        </RelativeLayout>
+
+        <!-- 副图指标BIAS的按钮，点击渲染BIAS指标 -->
+        <RelativeLayout
+            android:id="@+id/rl_bias"
+            android:layout_width="44dp"
+            android:clickable="true"
+            android:layout_height="match_parent">
+
+            <!-- 副图指标MACD的按钮，点击渲染MACD指标 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="BIAS"
+                android:textSize="8sp" />
+
+        </RelativeLayout>
+
+        <!-- 副图指标KDJ的按钮，点击渲染KDJ指标 -->
+        <RelativeLayout
+            android:id="@+id/rl_kdj"
+            android:layout_width="44dp"
+            android:clickable="true"
+            android:layout_height="match_parent">
+
+            <!-- 副图指标MACD的按钮，点击渲染MACD指标 -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="KDJ"
+                android:textSize="8sp" />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+    <!-- K线副图布局，用于加载K线副图控件 -->
+    <mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout
+        android:id="@+id/layout_secondary"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="24"
+        android:clickable="false" >
+
+        <mobileapp.myjf.com.myxchart.render.data.MacdView
+            android:id="@+id/view_secondary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <mobileapp.myjf.com.myxchart.render.background.SecondaryBackgroundView
+            android:id="@+id/background_secondary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <mobileapp.myjf.com.myxchart.render.highlight.SecondaryHighLight
+            android:id="@+id/highlight_secondary"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout>
+
+</LinearLayout>
