@@ -8,7 +8,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
-import mobileapp.myjf.com.myxchart.calculation.PXUtils;
+import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
 
 /**
  * Created by nethanhan on 2017/4/4.

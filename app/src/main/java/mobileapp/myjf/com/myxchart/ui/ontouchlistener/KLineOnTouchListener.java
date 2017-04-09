@@ -1,29 +1,29 @@
 package mobileapp.myjf.com.myxchart.ui.ontouchlistener;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.Intent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.Date;
-import java.util.List;
 
-import mobileapp.myjf.com.myxchart.calculation.LocalToView;
+import mobileapp.myjf.com.myxchart.utils.calculation.LocalToView;
 import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
 import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
+import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
+import mobileapp.myjf.com.myxchart.data.global.Variable;
 import mobileapp.myjf.com.myxchart.render.data.KLineView;
-import mobileapp.myjf.com.myxchart.render.data.MacdView;
-import mobileapp.myjf.com.myxchart.render.data.RSIView;
+import mobileapp.myjf.com.myxchart.render.data.SecondaryView;
 import mobileapp.myjf.com.myxchart.render.highlight.KLineHighLightView;
 import mobileapp.myjf.com.myxchart.render.highlight.SecondaryHighLight;
 import mobileapp.myjf.com.myxchart.ui.MainActivity;
 import mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout;
 import mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout;
+import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
 
 /**
- * Created by nethanhan on 2017/4/7.
+ * Created by gwx
  */
 
 public class KLineOnTouchListener implements View.OnTouchListener {
@@ -45,33 +45,36 @@ public class KLineOnTouchListener implements View.OnTouchListener {
     private float scrollX;
     // 滑动事件的索引
     private int scrollPosition = 0;
+
     // 每屏数据量
     private int itemNumber;
 
-    private Context context;
-    private List<KLineItem> kLineItems;
-    private KLineHighLightView kLineHighLightView;
+    private Activity activity;
     private KLineMainLayout kLineMainLayout;
-    private SecondaryHighLight secondaryHighLight;
     private KLineSecondaryLayout kLineSecondaryLayout;
+    private KLineHighLightView kLineHighLightView;
+    private SecondaryHighLight secondaryHighLight;
     private KLineView kLineView;
     private View secondaryView;
-    private KLineLocal kLineLocal;
-    private List<KLineItem> secondaryItems;
 
-    public KLineOnTouchListener(Context context, List<KLineItem> kLineItems, List<KLineItem> secondaryItems, KLineMainLayout kLineMainLayout, KLineView kLineView, KLineLocal kLineLocal, int itemNumber, KLineSecondaryLayout kLineSecondaryLayout, View secondaryView) {
-        this.context = context;
-        if (this.kLineItems == null) {
-            this.kLineItems = kLineItems;
-        }
-        this.kLineMainLayout = kLineMainLayout;
-        this.kLineView = kLineView;
+    private KLineRender kLineRender;
+    private KLineLocal kLineLocal;
+
+    public KLineOnTouchListener(Activity activity, KLineRender kLineRender, KLineLocal kLineLocal) {
+
+        this.activity = activity;
+        kLineMainLayout = GlobalViewsUtil.getMainLayout(activity);
+        kLineSecondaryLayout = GlobalViewsUtil.getSecondaryLayout(activity);
+        kLineHighLightView = GlobalViewsUtil.getKLineHighLight(activity);
+        secondaryHighLight = GlobalViewsUtil.getSecondaryHighLight(activity);
+        kLineView = GlobalViewsUtil.getKLineView(activity);
+        secondaryView = GlobalViewsUtil.getSecondaryView(activity);
+
+        itemNumber = Variable.getItemNumber();
+
+        this.kLineRender = kLineRender;
         this.kLineLocal = kLineLocal;
-        this.scrollPosition = kLineItems.size() - 36;
-        this.itemNumber = itemNumber;
-        this.kLineSecondaryLayout = kLineSecondaryLayout;
-        this.secondaryView = secondaryView;
-        this.secondaryItems = secondaryItems;
+        this.scrollPosition = kLineRender.getItems().size() - 36;
         this.kLineLocal = kLineLocal;
     }
 
@@ -86,15 +89,13 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                 } else {
                     long secondClickTime = new Date(System.currentTimeMillis()).getTime();
                     if (secondClickTime - firstClickTime < 300) {
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        activity.startActivity(intent);
                     } else {
                         isFirstClick = false;
                         firstClickTime = new Date(System.currentTimeMillis()).getTime();
                     }
                 }
-                kLineHighLightView = new KLineHighLightView(context);
-                secondaryHighLight = new SecondaryHighLight(context);
 
                 // 每次点击初始化长按判断变量
                 isLongClick = false;
@@ -116,8 +117,6 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                                 // 设置长按状态为true
                                 isLongClick = true;
                                 isJudge = false;
-                                kLineHighLightView.setkLineItems(kLineItems);
-                                secondaryHighLight.setkLineItems(secondaryItems);
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -133,25 +132,19 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                 // 若长按状态变量为true表明是长按事件，每次移动更新界面
                 if (isLongClick == true) {
 
-                    kLineMainLayout.removeView(kLineHighLightView);
-                    kLineHighLightView.setMoveX(event.getX());
-                    kLineHighLightView.invalidate();
-                    kLineMainLayout.addView(kLineHighLightView);
+                    RefreshHelper.refreshMainHighLight(activity, kLineRender, event.getX());
 
-                    kLineSecondaryLayout.removeView(secondaryHighLight);
-                    secondaryHighLight.setMoveX(event.getX());
-                    secondaryHighLight.invalidate();
-                    kLineSecondaryLayout.addView(secondaryHighLight);
+                    RefreshHelper.refreshSecondaryHighLight(activity, kLineRender, event.getX());
 
                 } else {
 
                     if (Math.abs(scrollX - event.getX()) > kLineView.getWidth() / 35) {
 
                         if (event.getX() > scrollX) {
-                            if (scrollPosition < kLineLocal.getkLineDatas().size() - itemNumber - 2) {
+                            if (scrollPosition < kLineLocal.getkLineDatas().size() - itemNumber - 1) {
                                 scrollPosition += 2;
                             } else {
-                                scrollPosition = kLineLocal.getkLineDatas().size() - itemNumber - 2;
+                                scrollPosition = kLineLocal.getkLineDatas().size() - itemNumber - 1;
                             }
                         } else {
                             if (scrollPosition > 1) {
@@ -161,21 +154,12 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                             }
                         }
                         scrollX = event.getX();
-                        kLineMainLayout.removeView(kLineView);
-                        KLineRender kLineRender = LocalToView.getKLineRender(kLineLocal, kLineMainLayout.getWidth(), kLineMainLayout.getHeight(), kLineMainLayout.getHeight(), scrollPosition, 35);
-                        kLineItems = kLineRender.getItems();
-                        kLineView.setkLineItems(kLineRender);
-                        kLineMainLayout.addView(kLineView);
+                        Variable.setScrollStartPosition(scrollPosition);
+                        kLineRender = LocalToView.getKLineRender(activity,kLineLocal);
+                        RefreshHelper.refreshMainView(activity, kLineRender);
 
-                        kLineSecondaryLayout.removeView(secondaryView);
-                        kLineRender = LocalToView.getKLineRender(kLineLocal, kLineMainLayout.getWidth(), kLineSecondaryLayout.getHeight(), kLineSecondaryLayout.getHeight(), scrollPosition, 35);
-                        secondaryItems = kLineRender.getItems();
-                        if (secondaryView instanceof MacdView) {
-                            ((MacdView) secondaryView).setCoordinates(kLineRender);
-                        } else {
-                            ((RSIView) secondaryView).setCoordinates(kLineRender);
-                        }
-                        kLineSecondaryLayout.addView(secondaryView);
+                        int secondaryType = Variable.getSecondaryType();
+                        RefreshHelper.refreshSecondaryView(activity, kLineRender, secondaryType);
 
                     }
 
@@ -185,10 +169,10 @@ public class KLineOnTouchListener implements View.OnTouchListener {
 
                 break;
             case MotionEvent.ACTION_UP:
-                kLineMainLayout.removeView(kLineHighLightView);
-                kLineSecondaryLayout.removeView(secondaryHighLight);
-                kLineHighLightView = null;
-                secondaryHighLight = null;
+                // 传入空参，使控件清除高亮线
+                RefreshHelper.refreshMainHighLight(activity, null, event.getX());
+                RefreshHelper.refreshSecondaryHighLight(activity, null, event.getX());
+                // 初始化各项参数，准备下一次触摸事件
                 isLongClick = false;
                 isNoMove = true;
                 isJudge = false;

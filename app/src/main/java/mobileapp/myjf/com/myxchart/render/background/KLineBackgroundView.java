@@ -29,9 +29,9 @@ public class KLineBackgroundView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        // 分时线图所占高度（剩余部分为日期所占高度）
+        // K线图所占高度（剩余部分为日期所占高度）
         // float height = getHeight() / 20 * 19;
-        float height = getHeight();
+        float height = getHeight() / 40 * 39;
         // 声明画笔
         Paint paint = new Paint();
         // 设置抗锯齿为true

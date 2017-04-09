@@ -1,6 +1,4 @@
-package mobileapp.myjf.com.myxchart.calculation;
-
-import android.util.Log;
+package mobileapp.myjf.com.myxchart.utils.calculation;
 
 import com.google.gson.Gson;
 

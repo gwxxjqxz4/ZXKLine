@@ -11,7 +11,7 @@ import android.view.View;
 
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.calculation.PXUtils;
+import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
 import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
 import mobileapp.myjf.com.myxchart.data.entity.util.TimeLinePoint;
 
@@ -60,42 +60,43 @@ public class TimeLineHighLightView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        if (timeLineRender != null && timeLineRender.getPoints().size() != 0) {
-            float height = getHeight() / 20 * 19;
-            List<TimeLinePoint> timeLinePoints = timeLineRender.getPoints();
-            // 声明画笔
-            Paint paint = new Paint();
-            // 设置抗锯齿为true
-            paint.setAntiAlias(true);
-            // 设置线宽为3
-            paint.setStrokeWidth(3);
-            // 设置线的颜色为黑色
-            paint.setColor(Color.BLACK);
-            // 根据moveX画出竖线
-            float unitX = ((float) getWidth()) / 1440;
-            Log.e("unitX", "unitX = " + unitX + "");
-            int position = (int) (moveX / unitX) + 1;
-            if (position < 1) {
-                position = 1;
-            }
-
-            if (position > timeLinePoints.size() - 1) {
-                position = timeLinePoints.size() - 1;
-            }
-            Log.e("position", "position = " + position + "");
-            float lineX = position * unitX;
-            Log.e("lineX", "lineX = " + lineX + "");
-            int priceTemp = (int) (timeLinePoints.get(position).getPrice() * 100);
-            float price = (float) priceTemp / 100;
-            int hours;
-            String timeString = timeLinePoints.get(position).getTime();
-            double lineY = timeLinePoints.get(position).getCoordinateY();
-            canvas.drawLine(lineX, 0, lineX, height, paint);
-            canvas.drawLine(0, (float) lineY, getWidth(), (float) lineY, paint);
-            paint.setTextSize(PXUtils.dip2px(context, 12));
-            canvas.drawText("" + price, 0, (float) lineY, paint);
-            canvas.drawText(timeString, lineX, height, paint);
+        // 非空判断，若传入数据为空则清除高亮线
+        if (timeLineRender == null || timeLineRender.getPoints().size() < 0) {
+            super.onDraw(canvas);
+            return;
         }
+
+        float height = getHeight() / 20 * 19;
+        List<TimeLinePoint> timeLinePoints = timeLineRender.getPoints();
+        // 声明画笔
+        Paint paint = new Paint();
+        // 设置抗锯齿为true
+        paint.setAntiAlias(true);
+        // 设置线宽为3
+        paint.setStrokeWidth(3);
+        // 设置线的颜色为黑色
+        paint.setColor(Color.BLACK);
+        // 根据moveX画出竖线
+        float unitX = ((float) getWidth()) / 1440;
+        int position = (int) (moveX / unitX) + 1;
+        if (position < 1) {
+            position = 1;
+        }
+
+        if (position > timeLinePoints.size() - 1) {
+            position = timeLinePoints.size() - 1;
+        }
+        float lineX = position * unitX;
+        int priceTemp = (int) (timeLinePoints.get(position).getPrice() * 100);
+        float price = (float) priceTemp / 100;
+        String timeString = timeLinePoints.get(position).getTime();
+        double lineY = timeLinePoints.get(position).getCoordinateY();
+        canvas.drawLine(lineX, 0, lineX, height, paint);
+        canvas.drawLine(0, (float) lineY, getWidth(), (float) lineY, paint);
+        paint.setTextSize(PXUtils.dip2px(context, 12));
+        canvas.drawText("" + price, 0, (float) lineY, paint);
+        canvas.drawText(timeString, lineX, height, paint);
+
         super.onDraw(canvas);
     }
 

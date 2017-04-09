@@ -140,7 +140,7 @@
         android:layout_weight="24"
         android:clickable="false" >
 
-        <mobileapp.myjf.com.myxchart.render.data.MacdView
+        <mobileapp.myjf.com.myxchart.render.data.SecondaryView
             android:id="@+id/view_secondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

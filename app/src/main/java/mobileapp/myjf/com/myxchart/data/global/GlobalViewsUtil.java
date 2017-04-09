@@ -1,14 +1,11 @@
 package mobileapp.myjf.com.myxchart.data.global;
 
 import android.app.Activity;
-import android.content.Context;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +15,11 @@ import mobileapp.myjf.com.myxchart.render.background.KLineBackgroundView;
 import mobileapp.myjf.com.myxchart.render.background.SecondaryBackgroundView;
 import mobileapp.myjf.com.myxchart.render.background.TimeLineBackgroundView;
 import mobileapp.myjf.com.myxchart.render.data.KLineView;
-import mobileapp.myjf.com.myxchart.render.data.MacdView;
-import mobileapp.myjf.com.myxchart.render.data.RSIView;
+import mobileapp.myjf.com.myxchart.render.data.SecondaryView;
 import mobileapp.myjf.com.myxchart.render.data.TimeLineView;
 import mobileapp.myjf.com.myxchart.render.highlight.KLineHighLightView;
 import mobileapp.myjf.com.myxchart.render.highlight.SecondaryHighLight;
 import mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView;
-import mobileapp.myjf.com.myxchart.ui.KTLineFragment;
 import mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout;
 import mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout;
 
@@ -120,8 +115,8 @@ public class GlobalViewsUtil {
         return (KLineHighLightView)activity.findViewById(R.id.highlight_kline);
     }
 
-    public static MacdView getSecondaryView(Activity activity){
-        return (MacdView) activity.findViewById(R.id.view_secondary);
+    public static SecondaryView getSecondaryView(Activity activity){
+        return (SecondaryView) activity.findViewById(R.id.view_secondary);
     }
 
     public static SecondaryBackgroundView getSecondaryBackground(Activity activity){

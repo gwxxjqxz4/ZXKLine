@@ -10,7 +10,8 @@ import android.view.View;
 
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.calculation.PXUtils;
+import mobileapp.myjf.com.myxchart.data.global.Variable;
+import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
 import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
 import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
 
@@ -21,7 +22,9 @@ import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
 public class KLineView extends View {
 
     // 显示所需的坐标集合
-    KLineRender kLineRender;
+    private KLineRender kLineRender;
+    private int startPosition;
+    private int stopPosition;
 
     // 构造方法
     public KLineView(Context context) {
@@ -41,7 +44,7 @@ public class KLineView extends View {
      *
      * @param kLineRender 坐标集合，可由Calculation类中的calculationKLines方法返回
      */
-    public void setkLineItems(KLineRender kLineRender) {
+    public void setKLineRender(KLineRender kLineRender) {
         this.kLineRender = kLineRender;
     }
 
@@ -106,11 +109,27 @@ public class KLineView extends View {
             canvas.drawText(kLineRender.getUnderPrice() + "", 0, height / 4 * 3 + startHeight, paint);
             canvas.drawText(kLineRender.getBottomPrice() + "", 0, height, paint);
 
-            canvas.drawText(kLineItems.get((kLineItems.size() - 1)).getDate(), 0, getHeight(), paint);
-            canvas.drawText(kLineItems.get((kLineItems.size() - 1) / 4 * 3 + 2).getDate(), getWidth() / 4, getHeight(), paint);
-            canvas.drawText(kLineItems.get((kLineItems.size() - 1) / 4 * 2 + 1).getDate(), getWidth() / 4 * 2, getHeight(), paint);
-            canvas.drawText(kLineItems.get((kLineItems.size() - 1) / 4).getDate(), getWidth() / 4 * 3, getHeight(), paint);
-            canvas.drawText(kLineItems.get(0).getDate(), getWidth(), getHeight(), paint);
+            int itemNumber = Variable.getItemNumber();
+            // 若数据量小于一屏时，设置开始索引
+            int startX = 0;
+
+            float unitX;
+            if (kLineItems.size() >= itemNumber) {
+                unitX = ((float) getWidth()) / kLineItems.size();
+            } else {
+                unitX = ((float) getWidth()) / itemNumber;
+                startX = itemNumber - kLineItems.size();
+            }
+            int position1 = (int) (getWidth() / unitX) - startX;
+            int position2 = (int) (getWidth() / 4 * 3 /unitX) - startX;
+            int position3 = (int) (getWidth() / 4 * 2 /unitX) - startX;
+            int position4 = (int) (getWidth() / 4 /unitX) - startX;
+
+            canvas.drawText(kLineItems.get(position1 - 1).getDate(), 0, getHeight(), paint);
+            canvas.drawText(kLineItems.get(position2 + startX).getDate(), getWidth() / 4, getHeight(), paint);
+            canvas.drawText(kLineItems.get(position3 + startX).getDate(), getWidth() / 4 * 2, getHeight(), paint);
+            canvas.drawText(kLineItems.get(position4 + startX).getDate(), getWidth() / 4 * 3, getHeight(), paint);
+            canvas.drawText(kLineItems.get(0 + startX).getDate(), getWidth(), getHeight(), paint);
         }
         super.onDraw(canvas);
     }

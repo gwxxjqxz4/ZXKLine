@@ -7,12 +7,11 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.calculation.PXUtils;
+import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
 import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
 import mobileapp.myjf.com.myxchart.data.entity.util.TimeLinePoint;
 

@@ -11,7 +11,7 @@ public class Cache {
     private static Map<String,KLineLocal> kLineLocals = new HashMap<>();
 
     public Cache(){
-        String[] types = new String[]{"fenshi","rik","60fen","zhouk","yuek","1fen","5fen","30fen","240fen"};
+        String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
         KLineLocal fenshi = null;
         KLineLocal rik = null;
         KLineLocal fen60 = null;

@@ -9,12 +9,12 @@ import android.widget.RelativeLayout;
 import java.util.Date;
 
 import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
-import mobileapp.myjf.com.myxchart.ui.layout.TimeLineLayout;
+import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView;
 import mobileapp.myjf.com.myxchart.ui.MainActivity;
 
 /**
- * Created by nethanhan on 2017/4/7.
+ * Created by gwx
  */
 
 public class TimeLineOnTouchListener implements View.OnTouchListener {
@@ -33,17 +33,18 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
     // 第一次点击的时间
     private long firstClickTime;
 
-
-    private Activity context;
+    private Activity activity;
     private RelativeLayout timeLineLayout;
     private TimeLineHighLightView timeLineHighLightView;
     private TimeLineRender timeLineRender;
 
-    public TimeLineOnTouchListener(Activity context, RelativeLayout timeLineLayout, TimeLineHighLightView timeLineHighLightView, TimeLineRender timeLineRender) {
-        this.context = context;
-        this.timeLineLayout = timeLineLayout;
-        this.timeLineHighLightView = timeLineHighLightView;
+    public TimeLineOnTouchListener(Activity activity, TimeLineRender timeLineRender) {
+        this.activity = activity;
         this.timeLineRender = timeLineRender;
+
+        timeLineLayout = GlobalViewsUtil.getTimeLineLayout(activity);
+        timeLineHighLightView = GlobalViewsUtil.getTimeLineHighLight(activity);
+
     }
 
     @Override
@@ -51,7 +52,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if(timeLineHighLightView == null){
-                    timeLineHighLightView = new TimeLineHighLightView(context);
+                    timeLineHighLightView = new TimeLineHighLightView(activity);
                 }
                 if(isFirstClick){
                     isFirstClick = false;
@@ -59,8 +60,8 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                 }else{
                     long secondClickTime = new Date(System.currentTimeMillis()).getTime();
                     if(secondClickTime - firstClickTime < 300){
-                        Intent intent = new Intent(context, MainActivity.class);
-                        context.startActivity(intent);
+                        Intent intent = new Intent(activity, MainActivity.class);
+                        activity.startActivity(intent);
                     }else{
                         isFirstClick = false;
                         firstClickTime = new Date(System.currentTimeMillis()).getTime();
@@ -98,8 +99,6 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                 if ((Math.abs(event.getX() - startX) > 50 || Math.abs(event.getY() - startY) > 50) && isJudge == true) {
                     isNoMove = false;
                 }
-//                        Log.e("拖动事件", "isNoMove = " + isNoMove);
-//                        Log.e("拖动事件", "isLongClick = " + isLongClick);
                 // 若长按状态变量为true表明是长按事件，每次移动更新界面
                 if (isLongClick == true) {
 
@@ -109,7 +108,6 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                     timeLineLayout.addView(timeLineHighLightView);
 
                 }
-//                            Log.e("拖动事件", "分时线布局被拖动了:" + event.getX() + "," + event.getY());
 
 
                 break;

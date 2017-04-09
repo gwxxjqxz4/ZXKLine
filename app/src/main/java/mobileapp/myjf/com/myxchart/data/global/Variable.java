@@ -1,6 +1,7 @@
 package mobileapp.myjf.com.myxchart.data.global;
 
 import android.app.Activity;
+import android.view.View;
 
 import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
 
@@ -16,6 +17,8 @@ public class Variable {
     private static Variable variable = new Variable();
     // 用户选择的图表类型(按标题栏从左至右)
     private static int selectedType;
+    // 用户选择的副图类型（按标题从左至右）
+    private static int secondaryType;
     // 滚动状态的开始索引
     private static int scrollStartPosition;
     // 滚动状态的结束索引
@@ -43,7 +46,7 @@ public class Variable {
         Variable.scrollStopPosition = scrollStopPosition;
     }
 
-    public int getSelectedType() {
+    public static int getSelectedType() {
         return selectedType;
     }
 
@@ -78,4 +81,13 @@ public class Variable {
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
+
+    public static int getSecondaryType() {
+        return secondaryType;
+    }
+
+    public static void setSecondaryType(int secondaryType) {
+        Variable.secondaryType = secondaryType;
+    }
+
 }
