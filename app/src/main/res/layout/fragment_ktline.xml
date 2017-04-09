@@ -24,11 +24,16 @@
 
         <!-- 用于容纳分时图的相对布局 -->
         <RelativeLayout
+            android:clickable="true"
             android:id="@+id/layout_timeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"
             android:visibility="visible">
+            <mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView
+                android:id="@+id/highlight_time"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <mobileapp.myjf.com.myxchart.render.data.TimeLineView
                 android:id="@+id/view_time"
@@ -39,12 +44,6 @@
                 android:id="@+id/background_time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
-            <mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView
-                android:id="@+id/highlight_time"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
 
         </RelativeLayout>
 

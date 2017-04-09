@@ -28,6 +28,7 @@ public class LocalToView {
 
     // K线图一屏显示的数据量，在getKLineRender中初始化
     private static int itemNumber;
+    private static Activity activity;
 
     public static TimeLineRender getTimeLineRender(Activity activity, TimeLineLocal timeLineLocal) {
 
@@ -122,6 +123,8 @@ public class LocalToView {
 
     public static KLineRender getKLineRender(Activity activity, KLineLocal kLineLocal) {
 
+        LocalToView.activity = activity;
+
         KLineMainLayout kLineMainLayout = GlobalViewsUtil.getMainLayout(activity);
         KLineSecondaryLayout kLineSecondaryLayout = GlobalViewsUtil.getSecondaryLayout(activity);
 
@@ -142,16 +145,15 @@ public class LocalToView {
         List<KLineData> viewDatas = new ArrayList<>();
         int lastPosition = 0;
         int firstPosition = 0;
-        if(kLineDatas.size() < itemNumber){
+        if (kLineDatas.size() < itemNumber) {
             firstPosition = kLineDatas.size() - 1;
             lastPosition = 0;
-        }else{
+        } else {
             lastPosition = kLineDatas.size() - startPosition - itemNumber - 1;
             firstPosition = kLineDatas.size() - startPosition - 1;
         }
-        if(firstPosition > kLineDatas.size() - 1)
-        {
-            Log.e("排错处理","firstPosition过大");
+        if (firstPosition > kLineDatas.size() - 1) {
+            Log.e("排错处理", "firstPosition过大");
             firstPosition = kLineDatas.size() - 1;
             lastPosition = firstPosition - itemNumber;
         }
@@ -175,7 +177,7 @@ public class LocalToView {
         // K线矩形参数的集合，每个条目为一个矩形，每个矩形中有四个坐标值（上下左右）
         List<KLineItem> items = new ArrayList<>();
         // 遍历服务器解析到的数据并生成K线坐标对象集合
-        setMainItems(items, viewDatas, width, unitX, maxValue, mainUnitY,startMainY);
+        setMainItems(items, viewDatas, width, unitX, maxValue, mainUnitY, startMainY);
         double[] secondaryLimit = setSecondaryItems(items, viewDatas, width, secondaryHeight, unitX, startSecondaryY);
 
 
@@ -203,7 +205,7 @@ public class LocalToView {
 
     }
 
-    public static void setMainItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double mainUnitY,double startMainY) {
+    public static void setMainItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double mainUnitY, double startMainY) {
         for (int i = 0; i < viewDatas.size(); i++) {
             // 该条服务器数据对应生成一个坐标对象
             KLineItem item = new KLineItem();
@@ -214,7 +216,7 @@ public class LocalToView {
             double bottom;
             // 计算上下影线的参数值
             double xValue = (left + right) / 2;
-            double highValue = (maxValue - viewDatas.get(i).getHigh()) * mainUnitY +startMainY;
+            double highValue = (maxValue - viewDatas.get(i).getHigh()) * mainUnitY + startMainY;
             double lowValue = (maxValue - viewDatas.get(i).getLow()) * mainUnitY + startMainY;
             // 计算Ma5线、Ma10线、Ma30线的参数值
             double ma5Y = (maxValue - viewDatas.get(i).getMa5()) * mainUnitY + startMainY;
@@ -256,9 +258,9 @@ public class LocalToView {
         double minValue = kLineDatas.get(3).getClose();
 
         int lastPosition;
-        if(kLineDatas.size() > itemNumber){
+        if (kLineDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else{
+        } else {
             lastPosition = kLineDatas.size();
         }
 
@@ -319,9 +321,9 @@ public class LocalToView {
         double minValue = kLineDatas.get(0).getMacd();
 
         int lastPosition;
-        if(kLineDatas.size() > itemNumber){
+        if (kLineDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else{
+        } else {
             lastPosition = kLineDatas.size();
         }
 
@@ -361,9 +363,9 @@ public class LocalToView {
         double minValue = kLineDatas.get(0).getRsi1();
 
         int lastPosition;
-        if(kLineDatas.size() > itemNumber){
+        if (kLineDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else {
+        } else {
             lastPosition = kLineDatas.size();
         }
 
@@ -403,9 +405,9 @@ public class LocalToView {
         double minValue = kLineDatas.get(0).getBias1();
 
         int lastPosition;
-        if(kLineDatas.size() > itemNumber){
+        if (kLineDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else {
+        } else {
             lastPosition = kLineDatas.size();
         }
 
@@ -445,9 +447,9 @@ public class LocalToView {
         double minValue = kLineDatas.get(0).getKdj_d();
 
         int lastPosition;
-        if(kLineDatas.size() > itemNumber){
+        if (kLineDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else {
+        } else {
             lastPosition = kLineDatas.size();
         }
 
@@ -457,11 +459,11 @@ public class LocalToView {
                 maxValue = kLineDatas.get(i).getKdj_d();
             }
 
-            if (kLineDatas.get(i).getKdj_d()  < minValue && kLineDatas.get(i).getKdj_d() != 0) {
+            if (kLineDatas.get(i).getKdj_d() < minValue && kLineDatas.get(i).getKdj_d() != 0) {
                 minValue = kLineDatas.get(i).getKdj_d();
             }
 
-            if (kLineDatas.get(i).getKdj_j() > maxValue ) {
+            if (kLineDatas.get(i).getKdj_j() > maxValue) {
                 maxValue = kLineDatas.get(i).getKdj_j();
             }
 
@@ -482,7 +484,7 @@ public class LocalToView {
         return limitValue;
     }
 
-    public static double[] setSecondaryItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double height, double unitX,double startSecondaryY) {
+    public static double[] setSecondaryItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double height, double unitX, double startSecondaryY) {
 
         double[] macdLimit = getMacdLimit(viewDatas);
         double[] rsiLimit = getRsiLimit(viewDatas);
@@ -508,10 +510,10 @@ public class LocalToView {
         double biasUnit = height / biasDifference;
         double kdjUnit = height / kdjDifference;
 
-        setMacdItems(items, viewDatas, width, unitX, macdMax, macdMin, macdUnit, macdDifference,startSecondaryY);
-        setRsiItems(items, viewDatas, width, unitX, rsiMax, rsiMin, rsiUnit, rsiDifference,startSecondaryY);
-        setBiasItems(items, viewDatas, width, unitX, biasMax, biasMin, biasUnit, biasDifference,startSecondaryY);
-        setKdjItems(items, viewDatas, width, unitX, kdjMax, kdjMin, kdjUnit, kdjDifference,startSecondaryY);
+        setMacdItems(items, viewDatas, width, unitX, macdMax, macdMin, macdUnit, macdDifference, startSecondaryY);
+        setRsiItems(items, viewDatas, width, unitX, rsiMax, rsiMin, rsiUnit, rsiDifference, startSecondaryY);
+        setBiasItems(items, viewDatas, width, unitX, biasMax, biasMin, biasUnit, biasDifference, startSecondaryY);
+        setKdjItems(items, viewDatas, width, unitX, kdjMax, kdjMin, kdjUnit, kdjDifference, startSecondaryY);
 
         double[] secondaryLimit = new double[]{macdMax, macdMin, rsiMax, rsiMin, biasMax, biasMin, kdjMax, kdjMin};
 
@@ -519,12 +521,12 @@ public class LocalToView {
 
     }
 
-    public static void setMacdItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference,double startSecondarY) {
+    public static void setMacdItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference, double startSecondarY) {
 
         int lastPosition;
-        if(viewDatas.size() > itemNumber){
+        if (viewDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else {
+        } else {
             lastPosition = viewDatas.size();
         }
 
@@ -560,12 +562,12 @@ public class LocalToView {
 
     }
 
-    public static void setRsiItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference,double startSecondarY) {
+    public static void setRsiItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference, double startSecondarY) {
 
         int lastPosition;
-        if(viewDatas.size() > itemNumber){
+        if (viewDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else {
+        } else {
             lastPosition = viewDatas.size();
         }
 
@@ -588,12 +590,12 @@ public class LocalToView {
 
     }
 
-    public static void setBiasItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference,double startSecondarY) {
+    public static void setBiasItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference, double startSecondarY) {
 
         int lastPosition;
-        if(viewDatas.size() > itemNumber){
+        if (viewDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else {
+        } else {
             lastPosition = viewDatas.size();
         }
 
@@ -619,12 +621,12 @@ public class LocalToView {
 
     }
 
-    public static void setKdjItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference,double startSecondarY) {
+    public static void setKdjItems(List<KLineItem> items, List<KLineData> viewDatas, double width, double unitX, double maxValue, double minValue, double unitY, double difference, double startSecondarY) {
 
         int lastPosition;
-        if(viewDatas.size() > itemNumber){
+        if (viewDatas.size() > itemNumber) {
             lastPosition = itemNumber;
-        }else {
+        } else {
             lastPosition = viewDatas.size();
         }
 

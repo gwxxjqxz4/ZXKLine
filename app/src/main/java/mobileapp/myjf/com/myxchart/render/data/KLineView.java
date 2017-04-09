@@ -1,5 +1,6 @@
 package mobileapp.myjf.com.myxchart.render.data;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
  */
 public class KLineView extends View {
 
+    Activity activity;
     // 显示所需的坐标集合
     private KLineRender kLineRender;
     private int startPosition;
@@ -46,6 +48,7 @@ public class KLineView extends View {
      */
     public void setKLineRender(KLineRender kLineRender) {
         this.kLineRender = kLineRender;
+        activity = (Activity) getContext();
     }
 
     @Override
@@ -74,6 +77,11 @@ public class KLineView extends View {
                 // 使用坐标对象的参数和画笔绘制矩形
                 canvas.drawRect((float) kLineItems.get(i).getRectLeft(), (float) kLineItems.get(i).getRectTop(), (float) kLineItems.get(i).getRectRight(), (float) kLineItems.get(i).getRectBottom(), paint);
                 canvas.drawLine((float) kLineItems.get(i).gethLineTop().getCoordinateX(), (float) kLineItems.get(i).gethLineTop().getCoordinateY(), (float) kLineItems.get(i).gethLineBottom().getCoordinateX(), (float) kLineItems.get(i).gethLineBottom().getCoordinateY(), paint);
+                if (kLineItems.get(i).getRectBottom() == kLineItems.get(i).getRectTop()) {
+                    paint.setStrokeWidth(PXUtils.dip2px(getContext(), 2.5f));
+                    canvas.drawLine((float) kLineItems.get(i).getRectLeft(),(float) kLineItems.get(i).getRectTop(),(float) kLineItems.get(i).getRectRight(),(float) kLineItems.get(i).getRectTop(),paint);
+                    paint.setStrokeWidth(PXUtils.dip2px(getContext(), 1.5f));
+                }
             }
             // 设置ma5线颜色
             paint.setColor(Color.BLUE);
@@ -121,15 +129,16 @@ public class KLineView extends View {
                 startX = itemNumber - kLineItems.size();
             }
             int position1 = (int) (getWidth() / unitX) - startX;
-            int position2 = (int) (getWidth() / 4 * 3 /unitX) - startX;
-            int position3 = (int) (getWidth() / 4 * 2 /unitX) - startX;
-            int position4 = (int) (getWidth() / 4 /unitX) - startX;
+            int position2 = (int) (getWidth() / 4 * 3 / unitX) - startX;
+            int position3 = (int) (getWidth() / 4 * 2 / unitX) - startX;
+            int position4 = (int) (getWidth() / 4 / unitX) - startX;
 
             canvas.drawText(kLineItems.get(position1 - 1).getDate(), 0, getHeight(), paint);
             canvas.drawText(kLineItems.get(position2 + startX).getDate(), getWidth() / 4, getHeight(), paint);
             canvas.drawText(kLineItems.get(position3 + startX).getDate(), getWidth() / 4 * 2, getHeight(), paint);
             canvas.drawText(kLineItems.get(position4 + startX).getDate(), getWidth() / 4 * 3, getHeight(), paint);
             canvas.drawText(kLineItems.get(0 + startX).getDate(), getWidth(), getHeight(), paint);
+
         }
         super.onDraw(canvas);
     }

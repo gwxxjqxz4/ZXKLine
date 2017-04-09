@@ -40,13 +40,11 @@ public class DrawKLine {
 
 
     public static void initSecondaryListener(Activity activity) {
-
         List<RelativeLayout> views = GlobalViewsUtil.getTypes(activity);
         View.OnClickListener secondaryListener = new SecondaryClickListener(activity);
         for(int i = 0;i <= 3;i++){
             views.get(i).setOnClickListener(secondaryListener);
         }
-
     }
 
 }

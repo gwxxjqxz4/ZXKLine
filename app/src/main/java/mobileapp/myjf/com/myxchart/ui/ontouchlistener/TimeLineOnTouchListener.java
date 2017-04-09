@@ -2,6 +2,7 @@ package mobileapp.myjf.com.myxchart.ui.ontouchlistener;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
@@ -12,6 +13,7 @@ import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
 import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView;
 import mobileapp.myjf.com.myxchart.ui.MainActivity;
+import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
 
 /**
  * Created by gwx
@@ -34,7 +36,6 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
     private long firstClickTime;
 
     private Activity activity;
-    private RelativeLayout timeLineLayout;
     private TimeLineHighLightView timeLineHighLightView;
     private TimeLineRender timeLineRender;
 
@@ -42,13 +43,13 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
         this.activity = activity;
         this.timeLineRender = timeLineRender;
 
-        timeLineLayout = GlobalViewsUtil.getTimeLineLayout(activity);
         timeLineHighLightView = GlobalViewsUtil.getTimeLineHighLight(activity);
 
     }
 
     @Override
     public boolean onTouch(View v, final MotionEvent event) {
+        Log.e("TimeLineHighLight","分时线触摸事件正确获取");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if(timeLineHighLightView == null){
@@ -86,7 +87,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                                 // 设置长按状态为true
                                 isLongClick = true;
                                 isJudge = false;
-                                timeLineHighLightView.setTimeLineRender(timeLineRender);
+                                Log.e("TimeLineHighLight","分时线长按事件正确触发");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -95,25 +96,22 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                 }).start();
                 break;
             case MotionEvent.ACTION_MOVE:
-                // 一秒内任意一次坐标偏离20以上视为非长按事件，未移动状态变量置为false
+                // 一秒内任意一次坐标偏离50以上视为非长按事件，未移动状态变量置为false
                 if ((Math.abs(event.getX() - startX) > 50 || Math.abs(event.getY() - startY) > 50) && isJudge == true) {
                     isNoMove = false;
                 }
                 // 若长按状态变量为true表明是长按事件，每次移动更新界面
                 if (isLongClick == true) {
 
-                    timeLineLayout.removeView(timeLineHighLightView);
-                    timeLineHighLightView.setMoveX(event.getX());
-                    timeLineHighLightView.invalidate();
-                    timeLineLayout.addView(timeLineHighLightView);
+                    RefreshHelper.refreshTimeLineHighLight(activity,timeLineRender,event.getX());
 
                 }
 
 
                 break;
             case MotionEvent.ACTION_UP:
-                timeLineLayout.removeView(timeLineHighLightView);
-                timeLineHighLightView = null;
+                // 传入空数据刷新，隐藏分时线高亮
+                RefreshHelper.refreshTimeLineHighLight(activity,null,0);
                 isLongClick = false;
                 isNoMove = true;
                 isJudge = false;

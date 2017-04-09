@@ -1,6 +1,7 @@
 package mobileapp.myjf.com.myxchart.ui.subscriber;
 
 import android.app.Activity;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -62,6 +63,12 @@ public class GetKLineSubscriber extends DefaultSubscriber<KLineOriginal> {
         if (selectedType == type) {
             DrawKLine.drawKLine(activity, kLineLocal);
             DrawSecondary.drawSecondary(activity,kLineLocal);
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,"网络请求完成，刷新界面",Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 

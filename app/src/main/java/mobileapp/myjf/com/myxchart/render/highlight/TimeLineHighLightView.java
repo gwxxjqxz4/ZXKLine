@@ -91,6 +91,9 @@ public class TimeLineHighLightView extends View {
         float price = (float) priceTemp / 100;
         String timeString = timeLinePoints.get(position).getTime();
         double lineY = timeLinePoints.get(position).getCoordinateY();
+        Log.e("TimeLineHighLight","分时线长按事件正确触发,数据为：");
+        Log.e("TimeLineHighLight","lineX = " + lineX);
+        Log.e("TimeLineHighLight","lineY = " + lineY);
         canvas.drawLine(lineX, 0, lineX, height, paint);
         canvas.drawLine(0, (float) lineY, getWidth(), (float) lineY, paint);
         paint.setTextSize(PXUtils.dip2px(context, 12));

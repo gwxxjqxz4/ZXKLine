@@ -8,8 +8,10 @@ import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
 
 public class Cache {
 
+    // TODO 用于模拟本地缓存的键值对，后续要换成数据库
     private static Map<String,KLineLocal> kLineLocals = new HashMap<>();
 
+    // 构造方法，第一次使用该类时初始化一些信息
     public Cache(){
         String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
         KLineLocal fenshi = null;

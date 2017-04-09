@@ -2,14 +2,17 @@ package mobileapp.myjf.com.myxchart.ui.onclicklistener;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
+import java.util.TooManyListenersException;
 
 import mobileapp.myjf.com.myxchart.R;
 import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
@@ -145,6 +148,7 @@ public class PagerClickListener implements View.OnClickListener {
         Variable.setSelectedType(type);
         String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
 
+        // 如果没有本地缓存则直接请求服务器数据并缓存
         if (Cache.getkLineLocals().get(types[type]) == null) {
 
             GetKLineOriginal getKLineList = new GetKLineOriginal();
@@ -158,15 +162,41 @@ public class PagerClickListener implements View.OnClickListener {
                     return false;
                 }
             });
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,"开始请求网络",Toast.LENGTH_SHORT).show();
+                }
+            });
 
             Variable.setSelectedType(type);
-        } else {
+        }
+        // 如果有本地缓存则先渲染本地缓存，再向服务器请求网络并缓存
+        else {
             KLineLocal kLineLocal = Cache.getkLineLocals().get(types[type]);
             int selectedType = Variable.getSelectedType();
             if (type == selectedType) {
                 DrawKLine.drawKLine(activity, kLineLocal);
                 DrawSecondary.drawSecondary(activity, kLineLocal);
             }
+
+            GetKLineOriginal getKLineList = new GetKLineOriginal();
+            getKLineList.setType(types[type]);
+            getKLineList.setSyncOrgCode("QL");
+            getKLineList.setProductCode("QLOIL10T");
+            getKLineList.execute(new GetKLineSubscriber(activity, type));
+            kLineLayout.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return false;
+                }
+            });activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(activity,"开始请求网络",Toast.LENGTH_SHORT).show();
+                }
+            });
+
         }
 
     }
