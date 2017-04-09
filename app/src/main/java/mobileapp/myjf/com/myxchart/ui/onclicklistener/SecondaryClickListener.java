@@ -13,7 +13,6 @@ import mobileapp.myjf.com.myxchart.data.global.Cache;
 import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
 import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.data.global.Variable;
-import mobileapp.myjf.com.myxchart.render.draw.DrawKLine;
 import mobileapp.myjf.com.myxchart.render.draw.DrawSecondary;
 
 /**

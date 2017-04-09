@@ -33,7 +33,7 @@ public class LocalToView {
     public static TimeLineRender getTimeLineRender(Activity activity, TimeLineLocal timeLineLocal) {
 
         RelativeLayout timeLineLayout = GlobalViewsUtil.getTimeLineLayout(activity);
-        double viewWidth = timeLineLayout.getWidth();
+        double viewWidth = timeLineLayout.getWidth() - PXUtils.dip2px(activity,20);
         double viewHeight = timeLineLayout.getHeight();
 
         // 从本地缓存对象中获取数据

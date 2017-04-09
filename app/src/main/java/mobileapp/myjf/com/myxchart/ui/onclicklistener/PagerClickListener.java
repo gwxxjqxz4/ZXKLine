@@ -146,6 +146,8 @@ public class PagerClickListener implements View.OnClickListener {
     private void initKLineDatas(int type) {
 
         Variable.setSelectedType(type);
+
+        Variable.setSelectedType(type);
         String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
 
         // 如果没有本地缓存则直接请求服务器数据并缓存
@@ -169,7 +171,6 @@ public class PagerClickListener implements View.OnClickListener {
                 }
             });
 
-            Variable.setSelectedType(type);
         }
         // 如果有本地缓存则先渲染本地缓存，再向服务器请求网络并缓存
         else {
@@ -208,6 +209,7 @@ public class PagerClickListener implements View.OnClickListener {
         for (RelativeLayout rl : types) {
             ((TextView) rl.getChildAt(0)).setTextColor(Color.BLACK);
             rl.setBackgroundColor(Color.WHITE);
+            Variable.setSecondaryType(0);
         }
     }
 
