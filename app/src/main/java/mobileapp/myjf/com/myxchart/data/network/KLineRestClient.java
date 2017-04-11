@@ -22,7 +22,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * 请求类
  */
 public class KLineRestClient {
-    // 网址为"http://fapp.paiyuwang.com/"
     public static final String BaseURL = "http://data.meiyuanjinfu.com";
     // 接口实例
     public static ApiService apiService;

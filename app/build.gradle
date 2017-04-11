@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'org.greenrobot.greendao'
 
 android {
     signingConfigs {
@@ -26,6 +27,13 @@ android {
     }
 }
 
+
+greendao {
+    schemaVersion 1
+    daoPackage 'mobileapp.myjf.com.myxchart.greendao.gen'
+    targetGenDir 'src/main/java'
+}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
@@ -37,4 +45,6 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava:2.0.2'
     compile 'com.orhanobut:logger:1.15'
     compile 'com.orhanobut:dialogplus:1.11@aar'
+    compile 'org.greenrobot:greendao:3.0.1'
+    compile 'org.greenrobot:greendao-generator:3.0.0'
 }

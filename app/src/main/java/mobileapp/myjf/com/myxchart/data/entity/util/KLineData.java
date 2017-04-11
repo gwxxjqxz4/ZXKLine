@@ -1,11 +1,21 @@
 package mobileapp.myjf.com.myxchart.data.entity.util;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+
 /**
  * create by gwx
  * K线图数据类型，用于解析和操作从服务器请求来的K线图数据
  */
+@Entity
 public class KLineData {
 
+    // 数据库存取的唯一标识，插入时传null即可
+    @Id
+    private Long id;
+    // 图表类型，如日K、5分等
+    private String type;
     // 时间戳
     private long time;
     // 开盘价
@@ -33,6 +43,40 @@ public class KLineData {
     private double Bias1;
     private double Bias2;
     private double Bias3;
+
+    @Generated(hash = 1699596376)
+    public KLineData(Long id, String type, long time, double open, double high,
+            double low, double close, double Ma5, double Ma10, double Ma30,
+            double Macd_dif, double Macd_dea, double Macd, double Kdj_k,
+            double Kdj_d, double Kdj_j, double Rsi1, double Rsi2, double Rsi3,
+            double Bias1, double Bias2, double Bias3) {
+        this.id = id;
+        this.type = type;
+        this.time = time;
+        this.open = open;
+        this.high = high;
+        this.low = low;
+        this.close = close;
+        this.Ma5 = Ma5;
+        this.Ma10 = Ma10;
+        this.Ma30 = Ma30;
+        this.Macd_dif = Macd_dif;
+        this.Macd_dea = Macd_dea;
+        this.Macd = Macd;
+        this.Kdj_k = Kdj_k;
+        this.Kdj_d = Kdj_d;
+        this.Kdj_j = Kdj_j;
+        this.Rsi1 = Rsi1;
+        this.Rsi2 = Rsi2;
+        this.Rsi3 = Rsi3;
+        this.Bias1 = Bias1;
+        this.Bias2 = Bias2;
+        this.Bias3 = Bias3;
+    }
+
+    @Generated(hash = 1227447334)
+    public KLineData() {
+    }
 
     public long getTime() {
         return time;
@@ -218,5 +262,21 @@ public class KLineData {
                 ", Bias2=" + Bias2 +
                 ", Bias3=" + Bias3 +
                 '}';
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

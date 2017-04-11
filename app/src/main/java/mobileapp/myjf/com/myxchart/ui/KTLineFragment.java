@@ -13,12 +13,16 @@ import android.widget.TextView;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.R;
+import mobileapp.myjf.com.myxchart.data.domain.AddTimeLineOriginal;
 import mobileapp.myjf.com.myxchart.data.domain.GetTimeLineOriginal;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
 import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.data.global.Variable;
 import mobileapp.myjf.com.myxchart.render.background.TimeLineBackgroundView;
 import mobileapp.myjf.com.myxchart.ui.onclicklistener.PagerClickListener;
 import mobileapp.myjf.com.myxchart.ui.subscriber.GetTimeLineSubscriber;
+import mobileapp.myjf.com.myxchart.utils.dao.KLineManager;
+import mobileapp.myjf.com.myxchart.utils.dao.TimeLineManager;
 import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
 
 /**
@@ -27,7 +31,8 @@ import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
 
 public class KTLineFragment extends Fragment {
 
-    public KTLineFragment() {}
+    public KTLineFragment() {
+    }
 
     @Nullable
     @Override
@@ -47,32 +52,42 @@ public class KTLineFragment extends Fragment {
         initGlobalVariable();
     }
 
-    public void initClickListener(){
+    public void initClickListener() {
 
         initClickListener(getActivity());
 
     }
 
 
-    public void initTimeLineLayout(){
+    public void initTimeLineLayout() {
 
-        GetTimeLineOriginal getTimeLineList = new GetTimeLineOriginal();
-        getTimeLineList.setOrganizationCode("QL");
-        getTimeLineList.setProductCode("QLOIL10T");
-        getTimeLineList.setToken("IOSMOBILECLIENT");
-        getTimeLineList.execute(new GetTimeLineSubscriber(getActivity()));
-        RefreshHelper.refreshTimeLineBackground(getActivity());
-
+        List<TimeLineRemote> timeLineRemotes = TimeLineManager.queryTimeLineRemotes(getActivity());
+        if (timeLineRemotes != null && timeLineRemotes.size() > 0) {
+            AddTimeLineOriginal addTimeLineOriginal = new AddTimeLineOriginal();
+            addTimeLineOriginal.setOrganizationCode("QL");
+            addTimeLineOriginal.setProductCode("QLOIL10T");
+            addTimeLineOriginal.setToken("IOSMOBILECLIENT");
+            addTimeLineOriginal.setOpenTime(timeLineRemotes.get(timeLineRemotes.size() - 2).getOpenTime());
+            addTimeLineOriginal.execute(new GetTimeLineSubscriber(getActivity()));
+            RefreshHelper.refreshTimeLineBackground(getActivity());
+        }else{
+            GetTimeLineOriginal getTimeLineList = new GetTimeLineOriginal();
+            getTimeLineList.setOrganizationCode("QL");
+            getTimeLineList.setProductCode("QLOIL10T");
+            getTimeLineList.setToken("IOSMOBILECLIENT");
+            getTimeLineList.execute(new GetTimeLineSubscriber(getActivity()));
+            RefreshHelper.refreshTimeLineBackground(getActivity());
+        }
     }
 
-    public void initGlobalVariable(){
+    public void initGlobalVariable() {
         Variable.setItemNumber(35);
         Variable.setSelectedType(0);
     }
 
-    public static void initClickListener(Activity activity){
+    public static void initClickListener(Activity activity) {
         List<TextView> titles = GlobalViewsUtil.getTitles(activity);
-        for(TextView tv:titles){
+        for (TextView tv : titles) {
             tv.setOnClickListener(new PagerClickListener(activity));
         }
 

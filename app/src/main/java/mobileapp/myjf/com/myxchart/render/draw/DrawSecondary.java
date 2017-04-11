@@ -9,6 +9,7 @@ import java.util.List;
 
 import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
 import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
+import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
 import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.data.global.Variable;
@@ -28,12 +29,12 @@ import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
 
 public class DrawSecondary {
 
-    public static void drawSecondary(Activity activity, KLineLocal kLineLocal) {
+    public static void drawSecondary(Activity activity, List<KLineData> kLineDatas) {
 
         // 获取副图类型
         int secondaryType = Variable.getSecondaryType();
         // 本地数据经过计算得出副图数据
-        KLineRender kLineRender = LocalToView.getKLineRender(activity,kLineLocal);
+        KLineRender kLineRender = LocalToView.getKLineRender(activity,kLineDatas);
         // 根据所传参数刷新副图数据
         RefreshHelper.refreshSecondaryView(activity,kLineRender,secondaryType);
 

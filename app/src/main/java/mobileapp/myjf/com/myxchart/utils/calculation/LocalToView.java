@@ -30,11 +30,20 @@ public class LocalToView {
     private static int itemNumber;
     private static Activity activity;
 
+    /**
+     * 获取分时线数据坐标点等信息的方法
+     *
+     * @param activity
+     * @param timeLineLocal
+     * @return
+     */
     public static TimeLineRender getTimeLineRender(Activity activity, TimeLineLocal timeLineLocal) {
 
+        // 获取分时线的容器布局
         RelativeLayout timeLineLayout = GlobalViewsUtil.getTimeLineLayout(activity);
+        // 获取容器的宽高
         double viewWidth = timeLineLayout.getWidth() - PXUtils.dip2px(activity,20);
-        double viewHeight = timeLineLayout.getHeight();
+        double viewHeight = timeLineLayout.getHeight() - PXUtils.dip2px(activity,20);
 
         // 从本地缓存对象中获取数据
         List<TimeLineData> timeLineDatas = timeLineLocal.getTimeLineDatas();
@@ -121,7 +130,7 @@ public class LocalToView {
         return timeLineRender;
     }
 
-    public static KLineRender getKLineRender(Activity activity, KLineLocal kLineLocal) {
+    public static KLineRender getKLineRender(Activity activity, List<KLineData> kLineDatas) {
 
         LocalToView.activity = activity;
 
@@ -141,7 +150,6 @@ public class LocalToView {
         double startSecondaryY = secondaryViewHeight / 40;
         double secondaryHeight = secondaryViewHeight * 19 / 20;
 
-        List<KLineData> kLineDatas = kLineLocal.getkLineDatas();
         List<KLineData> viewDatas = new ArrayList<>();
         int lastPosition = 0;
         int firstPosition = 0;

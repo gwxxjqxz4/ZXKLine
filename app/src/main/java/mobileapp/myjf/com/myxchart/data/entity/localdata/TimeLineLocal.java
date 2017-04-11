@@ -13,7 +13,6 @@ public class TimeLineLocal {
     private double maxPrice;
     private double minPrice;
     private double yesterdayPrice;
-    private long lastStamp;
 
     public TimeLineLocal() {
     }
@@ -50,11 +49,4 @@ public class TimeLineLocal {
         this.yesterdayPrice = yesterdayPrice;
     }
 
-    public long getLastStamp() {
-        return lastStamp;
-    }
-
-    public void setLastStamp(long lastStamp) {
-        this.lastStamp = lastStamp;
-    }
 }

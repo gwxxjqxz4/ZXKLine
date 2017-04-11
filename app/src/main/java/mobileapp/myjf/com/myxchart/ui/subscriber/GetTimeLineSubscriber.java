@@ -12,8 +12,8 @@ import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
 import mobileapp.myjf.com.myxchart.data.entity.util.CommonEntity;
 import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.data.interactor.DefaultSubscriber;
-import mobileapp.myjf.com.myxchart.render.data.TimeLineView;
 import mobileapp.myjf.com.myxchart.ui.ontouchlistener.TimeLineOnTouchListener;
+import mobileapp.myjf.com.myxchart.utils.dao.TimeLineManager;
 import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
 
 /**
@@ -39,12 +39,12 @@ public class GetTimeLineSubscriber extends DefaultSubscriber<CommonEntity<TimeLi
 
         // 获取服务器原始数据
         TimeLineOriginal timeLineOriginal = timeLineListCommonEntity.getEntity();
-
+        // 将服务器的原始数据缓存到数据库中
+        TimeLineManager.writeTimeLineRemotes(activity,timeLineOriginal);
+        // 将原始数据转化成易于操作的数据
+        TimeLineLocal timeLineLocal = OriginalToLocal.getTimeLineLocal(timeLineOriginal,activity);
         // 声明容纳分时线的布局，用于设置点击事件
         RelativeLayout timeLineLayout = GlobalViewsUtil.getTimeLineLayout(activity);
-
-        // 将原始数据转化成易于保存操作的本地数据  TODO 之后要加缓存  并分离此后的逻辑
-        TimeLineLocal timeLineLocal = OriginalToLocal.getTimeLineLocal(timeLineOriginal);
         // 将本地数据转化成渲染用的数据
         TimeLineRender timeLineRender = LocalToView.getTimeLineRender(activity,timeLineLocal);
 

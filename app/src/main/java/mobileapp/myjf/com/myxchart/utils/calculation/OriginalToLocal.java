@@ -1,5 +1,9 @@
 package mobileapp.myjf.com.myxchart.utils.calculation;
 
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
@@ -13,6 +17,9 @@ import mobileapp.myjf.com.myxchart.data.entity.originaldata.KLineOriginal;
 import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineOriginal;
 import mobileapp.myjf.com.myxchart.data.entity.util.TimeLineData;
 import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
+import mobileapp.myjf.com.myxchart.data.global.Variable;
+import mobileapp.myjf.com.myxchart.utils.dao.KLineManager;
+import mobileapp.myjf.com.myxchart.utils.dao.TimeLineManager;
 
 /**
  * create by gwx
@@ -21,14 +28,16 @@ import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
 public class OriginalToLocal {
 
     /**
+     * 将分时线的数据处理成便于计算的格式
      *
-     * 将分时线的数据处理成便于缓存的格式
-     *
+     * @param timeLineOriginal
+     * @param activity
+     * @return
      */
-    public static TimeLineLocal getTimeLineLocal(TimeLineOriginal<TimeLineRemote> timeLineOriginal) {
+    public static TimeLineLocal getTimeLineLocal(TimeLineOriginal<TimeLineRemote> timeLineOriginal, Activity activity) {
 
-        // 从服务器响应的数据中取出保存每个时间点数据的列表
-        List<TimeLineRemote> timeLineRemotes = timeLineOriginal.getEntity();
+        // 从数据库中取出保存每个时间点数据的列表
+        List<TimeLineRemote> timeLineRemotes = TimeLineManager.queryTimeLineRemotes(activity);
         // 用于记录分时线中的最大价格
         double maxPrice = timeLineRemotes.get(0).getClose();
         // 用于记录分时线中的最小价格
@@ -56,7 +65,7 @@ public class OriginalToLocal {
             datas.add(timeLineData);
         }
 
-        // 将服务器返回的时间和价格填充到集合中
+        // 将数据库中的时间和价格填充到集合中
         // 经过本次遍历集合的时间顺序为从6：01到6：00
         for(TimeLineRemote timeLineRemote:timeLineRemotes){
 
@@ -115,24 +124,34 @@ public class OriginalToLocal {
                         datas.get(i).setHour(0);
                     }
                 }
+                if(datas.get(i - 1).getMinute() < 59){
+                    datas.get(i).setMinute(datas.get(i - 1).getMinute() + 1);
+                }else{
+                    datas.get(i).setMinute(0);
+                }
             }
         }
-
-        long lastStamp = timeLineRemotes.get(timeLineRemotes.size() - 1).getOpenTime();
-
+        // 将计算得到的数据保存起来以供之后使用
         TimeLineLocal timeLineLocal = new TimeLineLocal();
         timeLineLocal.setMaxPrice(maxPrice);
         timeLineLocal.setMinPrice(minPrice);
         timeLineLocal.setYesterdayPrice(yesterdayPrice);
         timeLineLocal.setTimeLineDatas(datas);
-        timeLineLocal.setLastStamp(lastStamp);
 
         return timeLineLocal;
 
     }
 
-    public static KLineLocal getKLineLocal(KLineOriginal kLineOriginal){
+    /**
+     * 解析服务器发送的json获取K线数据的方法
+     *
+     * @param kLineOriginal     服务器返回的数据
+     * @return
+     */
+    public static KLineLocal getKLineLocal(KLineOriginal kLineOriginal,int type){
 
+        // K线数据的类型
+        String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
 
         // 声明K线数据集合
         List<KLineData> kLineDates = new ArrayList<>();
@@ -143,6 +162,7 @@ public class OriginalToLocal {
         // 将数据字符串解析为数据对象集合
         List<List> kLineRemoteDates = gson.fromJson(kLineRemoteString, ArrayList.class);
         // 遍历数据对象集合，用其中的数值填充K线数据对象
+        if(kLineRemoteDates != null && kLineRemoteDates.size() > 0)
         for (int i = kLineRemoteDates.size() - 1; i >= 0; i--) {
             KLineData kLineData = new KLineData();
             kLineData.setTime(((Double) kLineRemoteDates.get(i).get(0)).intValue());
@@ -165,6 +185,7 @@ public class OriginalToLocal {
             kLineData.setBias1((double) kLineRemoteDates.get(i).get(17));
             kLineData.setBias2((double) kLineRemoteDates.get(i).get(18));
             kLineData.setBias3((double) kLineRemoteDates.get(i).get(19));
+            kLineData.setType(types[type]);
 
             kLineDates.add(kLineData);
         }

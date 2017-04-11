@@ -29,10 +29,20 @@ public class RemoteDataStore implements DataStore {
     }
 
     @Override
-    public Observable<KLineOriginal> getKLineData(String url){
+    public Observable<KLineOriginal> getKLineData(String url) {
         return apiService.getKLineData(url);
     }
 
+
+    @Override
+    public Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> addTimeLineData(String token, String list_start, String pageid, long openTime) {
+        return apiService.addTimeLineData(token, list_start, pageid, openTime);
+    }
+
+    @Override
+    public Observable<KLineOriginal> addKLineData(String token, String list_start, String pageid, String type, long openTime) {
+        return apiService.addKLineData(token, list_start, pageid, openTime, token);
+    }
 
 }
 

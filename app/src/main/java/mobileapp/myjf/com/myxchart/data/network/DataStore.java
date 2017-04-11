@@ -14,6 +14,11 @@ import rx.Observable;
 public interface DataStore {
 
     Observable<KLineOriginal> getKLineData(String url);
+
+    Observable<KLineOriginal> addKLineData(String organizationCode, String productCode, String token, String type, long openTime);
+
+    Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> addTimeLineData(String organizationCode, String productCode, String token, long openTime);
+
     Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> getTimeLineData(String organizationCode, String productCode, String token);
 
 }

@@ -7,7 +7,9 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.Date;
+import java.util.List;
 
+import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.utils.calculation.LocalToView;
 import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
 import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
@@ -58,9 +60,9 @@ public class KLineOnTouchListener implements View.OnTouchListener {
     private View secondaryView;
 
     private KLineRender kLineRender;
-    private KLineLocal kLineLocal;
+    List<KLineData> kLineDatas;
 
-    public KLineOnTouchListener(Activity activity, KLineRender kLineRender, KLineLocal kLineLocal) {
+    public KLineOnTouchListener(Activity activity, KLineRender kLineRender, List<KLineData> kLineDatas) {
 
         this.activity = activity;
         kLineMainLayout = GlobalViewsUtil.getMainLayout(activity);
@@ -73,9 +75,8 @@ public class KLineOnTouchListener implements View.OnTouchListener {
         itemNumber = Variable.getItemNumber();
 
         this.kLineRender = kLineRender;
-        this.kLineLocal = kLineLocal;
         this.scrollPosition = kLineRender.getItems().size() - 36;
-        this.kLineLocal = kLineLocal;
+        this.kLineDatas = kLineDatas;
     }
 
     @Override
@@ -141,10 +142,10 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                     if (Math.abs(scrollX - event.getX()) > kLineView.getWidth() / 35) {
 
                         if (event.getX() > scrollX) {
-                            if (scrollPosition < kLineLocal.getkLineDatas().size() - itemNumber - 1) {
+                            if (scrollPosition < kLineDatas.size() - itemNumber - 1) {
                                 scrollPosition += 2;
                             } else {
-                                scrollPosition = kLineLocal.getkLineDatas().size() - itemNumber - 1;
+                                scrollPosition = kLineDatas.size() - itemNumber - 1;
                             }
                         } else {
                             if (scrollPosition > 1) {
@@ -155,7 +156,7 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                         }
                         scrollX = event.getX();
                         Variable.setScrollStartPosition(scrollPosition);
-                        kLineRender = LocalToView.getKLineRender(activity,kLineLocal);
+                        kLineRender = LocalToView.getKLineRender(activity,kLineDatas);
                         RefreshHelper.refreshMainView(activity, kLineRender);
 
                         int secondaryType = Variable.getSecondaryType();

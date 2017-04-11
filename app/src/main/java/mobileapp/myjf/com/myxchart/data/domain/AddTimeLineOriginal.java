@@ -1,8 +1,10 @@
 package mobileapp.myjf.com.myxchart.data.domain;
 
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineOriginal;
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
+import java.util.Date;
+
 import mobileapp.myjf.com.myxchart.data.entity.util.CommonEntity;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
+import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineOriginal;
 import mobileapp.myjf.com.myxchart.data.interactor.UseCase;
 import mobileapp.myjf.com.myxchart.data.network.ApiService;
 import mobileapp.myjf.com.myxchart.data.network.DataStore;
@@ -14,11 +16,12 @@ import rx.Observable;
  * create by gwx
  * 请求分时线数据的类
  */
-public class GetTimeLineOriginal extends UseCase {
+public class AddTimeLineOriginal extends UseCase {
 
     private String token;
     private String organizationCode;
     private String productCode;
+    private long openTime;
 
     public String getToken() {
         return token;
@@ -36,6 +39,14 @@ public class GetTimeLineOriginal extends UseCase {
         this.organizationCode = organizationCode;
     }
 
+    public long getOpenTime() {
+        return openTime;
+    }
+
+    public void setOpenTime(long openTime) {
+        this.openTime = openTime;
+    }
+
     public String getProductCode() {
         return productCode;
     }
@@ -44,7 +55,7 @@ public class GetTimeLineOriginal extends UseCase {
         this.productCode = productCode;
     }
 
-    public GetTimeLineOriginal(){
+    public AddTimeLineOriginal(){
 
     }
 
@@ -53,6 +64,6 @@ public class GetTimeLineOriginal extends UseCase {
     protected Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> buildUseCaseObservable() {
         ApiService service = TimeLineRestClient.getInstance();
         DataStore dataStore = new RemoteDataStore(service);
-        return dataStore.getTimeLineData(organizationCode, productCode, token);
+        return dataStore.addTimeLineData(organizationCode, productCode, token,openTime);
     }
 }

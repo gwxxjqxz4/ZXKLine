@@ -15,10 +15,13 @@ import java.util.List;
 import java.util.TooManyListenersException;
 
 import mobileapp.myjf.com.myxchart.R;
+import mobileapp.myjf.com.myxchart.data.domain.AddKLineOriginal;
 import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
+import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.data.global.Data;
 import mobileapp.myjf.com.myxchart.render.draw.DrawSecondary;
 import mobileapp.myjf.com.myxchart.ui.ontouchlistener.KLineOnTouchListener;
+import mobileapp.myjf.com.myxchart.ui.subscriber.AddKLineSubscriber;
 import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
 import mobileapp.myjf.com.myxchart.data.global.Cache;
 import mobileapp.myjf.com.myxchart.data.domain.GetKLineOriginal;
@@ -27,6 +30,8 @@ import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.data.global.Variable;
 import mobileapp.myjf.com.myxchart.render.draw.DrawKLine;
 import mobileapp.myjf.com.myxchart.ui.subscriber.GetKLineSubscriber;
+import mobileapp.myjf.com.myxchart.utils.dao.KLineManager;
+import mobileapp.myjf.com.myxchart.utils.dao.StampJudgement;
 import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
 
 /**
@@ -130,7 +135,7 @@ public class PagerClickListener implements View.OnClickListener {
             case 7:
             case 8:
                 initKLineDatas(index);
-                if (hasBackground == false) {
+                if (!hasBackground) {
                     RefreshHelper.refreshSecondaryBackground(activity);
                     RefreshHelper.refreshMainBackground(activity);
                     hasBackground = true;
@@ -149,9 +154,11 @@ public class PagerClickListener implements View.OnClickListener {
 
         Variable.setSelectedType(type);
         String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
+        String[] newTypes = new String[]{"","1440","60","10080","432000","1","5","30","240"};
 
-        // 如果没有本地缓存则直接请求服务器数据并缓存
-        if (Cache.getkLineLocals().get(types[type]) == null) {
+        Log.e("数据库中本类型数据量",KLineManager.queryKLineDatas(activity,types[type]) + "");
+        // 如果数据库中没有该类数据或条目数量为0则直接请求旧接口插入数据
+        if(KLineManager.queryKLineDatas(activity,types[type]) == null || KLineManager.queryKLineDatas(activity,types[type]).size() == 0){
 
             GetKLineOriginal getKLineList = new GetKLineOriginal();
             getKLineList.setType(types[type]);
@@ -164,40 +171,49 @@ public class PagerClickListener implements View.OnClickListener {
                     return false;
                 }
             });
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity,"开始请求网络",Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-        // 如果有本地缓存则先渲染本地缓存，再向服务器请求网络并缓存
-        else {
-            KLineLocal kLineLocal = Cache.getkLineLocals().get(types[type]);
-            int selectedType = Variable.getSelectedType();
-            if (type == selectedType) {
-                DrawKLine.drawKLine(activity, kLineLocal);
-                DrawSecondary.drawSecondary(activity, kLineLocal);
+        }else{
+            List<KLineData> kLineDatas1 = KLineManager.queryKLineDatas(activity,types[2]);
+            Log.e("数据库清理使用的时间戳","使用的时间戳为" + kLineDatas1.get(kLineDatas1.size() - 1).toString() + "乘1000");
+            // 若数据库中有昨天的数据则清除数据库并请求网络
+            if(StampJudgement.isYesterdayData(kLineDatas1.get(kLineDatas1.size() - 1).getTime())){
+                KLineManager.deleteAllDatas(activity);
+                Log.e("清理后本类型数据量",KLineManager.queryKLineDatas(activity,types[type]) + "");
+                GetKLineOriginal getKLineList = new GetKLineOriginal();
+                getKLineList.setType(types[type]);
+                getKLineList.setSyncOrgCode("QL");
+                getKLineList.setProductCode("QLOIL10T");
+                getKLineList.execute(new GetKLineSubscriber(activity, type));
+                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return false;
+                    }
+                });
             }
-
-            GetKLineOriginal getKLineList = new GetKLineOriginal();
-            getKLineList.setType(types[type]);
-            getKLineList.setSyncOrgCode("QL");
-            getKLineList.setProductCode("QLOIL10T");
-            getKLineList.execute(new GetKLineSubscriber(activity, type));
-            kLineLayout.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return false;
+            // 若数据库中只有今天的数据则请求新接口并添加数据,并优先将已有数据渲染
+            else{
+                List<KLineData> kLineDatas = KLineManager.queryKLineDatas(activity,types[type]);
+                int selectedType = Variable.getSelectedType();
+                if (type == selectedType) {
+                    DrawKLine.drawKLine(activity, kLineDatas);
+                    DrawSecondary.drawSecondary(activity, kLineDatas);
                 }
-            });activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Toast.makeText(activity,"开始请求网络",Toast.LENGTH_SHORT).show();
-                }
-            });
-
+                AddKLineOriginal addKLineOriginal = new AddKLineOriginal();
+                addKLineOriginal.setOrganizationCode("QL");
+                addKLineOriginal.setProductCode("QLOIL10T");
+                long time = KLineManager.queryKLineDatas(activity,types[type]).get(KLineManager.queryKLineDatas(activity,types[type]).size() - 1).getTime();
+                addKLineOriginal.setOpenTime(time);
+                addKLineOriginal.setType(newTypes[type]);
+                addKLineOriginal.setToken("IOSMOBILECLIENT");
+                Log.e("请求用的参数：","请求用的参数:" + "机构代码 = " + "QL" + "，商品代码 = " + "QLOIL10T" + "，时间 = " +time + "，类型 = " + newTypes[type] + "，令牌 =" + "IOSMOBILECLIENT");
+                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        return false;
+                    }
+                });
+                addKLineOriginal.execute(new AddKLineSubscriber(activity,type));
+            }
         }
 
     }

@@ -20,9 +20,17 @@ import rx.Observable;
 public interface ApiService {
 
     @Headers("Referer:iapp.xingxingguijinshu.com")
-    // @GET("QL/Day_QLOIL10T")
     @GET
     Observable<KLineOriginal> getKLineData(@Url String url);
+
+    @FormUrlEncoded
+    @POST("MarketInfo/Product/ProductTimeShare_SR")
+    Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> addTimeLineData(
+            @Field("OrganizationCode") String organizationCode,
+            @Field("ProductCode") String productCode,
+            @Field("Token") String token,
+            @Field("OpenTime") long opentime
+    );
 
     @FormUrlEncoded
     @POST("MarketInfo/Product/ProductTimeShare_SR")
@@ -30,6 +38,16 @@ public interface ApiService {
             @Field("OrganizationCode") String organizationCode,
             @Field("ProductCode") String productCode,
             @Field("Token") String token
+    );
+
+    @FormUrlEncoded
+    @POST("Product/GetLatestKLineData")
+    Observable<KLineOriginal> addKLineData(
+            @Field("OrganizationCode") String organizationCode,
+            @Field("ProductCode") String productCode,
+            @Field("Token") String token,
+            @Field("OpenTime") long opentime,
+            @Field("KType") String type
     );
 
 }
