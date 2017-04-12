@@ -2,6 +2,8 @@ package mobileapp.myjf.com.myxchart.net.network;/**
  * Created by nethanhan on 2017/4/1.
  */
 
+import android.support.v4.media.VolumeProviderCompat;
+
 import mobileapp.myjf.com.myxchart.entity.util.CommonEntity;
 import mobileapp.myjf.com.myxchart.entity.originaldata.KLineOriginal;
 import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineRemote;
@@ -41,12 +43,12 @@ public interface ApiService {
     );
 
     @FormUrlEncoded
-    @POST("Product/GetLatestKLineData")
-    Observable<CommonEntity<KLineOriginal>> addKLineData(
+    @POST("Product/GetLatestKLineArrayData")
+    Observable<CommonEntity<double[][]>> addKLineData(
             @Field("OrganizationCode") String organizationCode,
             @Field("ProductCode") String productCode,
             @Field("Token") String token,
-            @Field("OpenTime") long opentime,
+            @Field("OpenTime") long openTime,
             @Field("KType") String type
     );
 

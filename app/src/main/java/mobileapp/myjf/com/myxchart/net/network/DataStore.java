@@ -15,7 +15,7 @@ public interface DataStore {
 
     Observable<KLineOriginal> getKLineData(String url);
 
-    Observable<CommonEntity<KLineOriginal>> addKLineData(String organizationCode, String productCode, String token, String type, long openTime);
+    Observable<CommonEntity<double[][]>> addKLineData(String organizationCode, String productCode, String token, long openTime, String type);
 
     Observable<CommonEntity<TimeLineOriginal<TimeLineRemote>>> addTimeLineData(String organizationCode, String productCode, String token, long openTime);
 

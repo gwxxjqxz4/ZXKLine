@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
+import mobileapp.myjf.com.myxchart.entity.util.CommonEntity;
 import mobileapp.myjf.com.myxchart.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.entity.localdata.TimeLineLocal;
 import mobileapp.myjf.com.myxchart.entity.originaldata.KLineOriginal;
@@ -181,6 +182,59 @@ public class OriginalToLocal {
 
             kLineDates.add(kLineData);
         }
+
+        return kLineDates;
+
+    }
+
+    /**
+     * 解析服务器发送的json获取K线数据的方法
+     *
+     * @param commonEntity     服务器返回的数据
+     * @return
+     */
+    public static List<KLineData> addKLineLocal(CommonEntity<double[][]> commonEntity, int type){
+
+        // K线数据的类型
+        String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
+
+        // 声明K线数据集合
+        List<KLineData> kLineDates = new ArrayList<>();
+        // 获取解析Json的对象
+//        Gson gson = new Gson();
+        // 以字符串形式获取响应中的K线数据
+//        String kLineRemoteString = commonEntity.getEntity();
+        // 将数据字符串解析为数据对象集合
+//        List<List> kLineRemoteDates = gson.fromJson(kLineRemoteString, ArrayList.class);
+        // 遍历数据对象集合，用其中的数值填充K线数据对象
+//        if(kLineRemoteDates != null && kLineRemoteDates.size() > 0)
+        double[][] kLineRemoteDates = commonEntity.getEntity();
+            for (int i = kLineRemoteDates.length - 1; i >= 0; i--) {
+                KLineData kLineData = new KLineData();
+                kLineData.setTime((((Double) kLineRemoteDates[i][0]).intValue()));
+                kLineData.setOpen((double) kLineRemoteDates[i][1]);
+                kLineData.setHigh((double) kLineRemoteDates[i][2]);
+                kLineData.setLow((double) kLineRemoteDates[i][3]);
+                kLineData.setClose((double) kLineRemoteDates[i][4]);
+                kLineData.setMa5((double) kLineRemoteDates[i][5]);
+                kLineData.setMa10((double) kLineRemoteDates[i][6]);
+                kLineData.setMa30((double) kLineRemoteDates[i][7]);
+                kLineData.setMacd_dif((double) kLineRemoteDates[i][8]);
+                kLineData.setMacd_dea((double) kLineRemoteDates[i][9]);
+                kLineData.setMacd((double) kLineRemoteDates[i][10]);
+                kLineData.setKdj_k((double) kLineRemoteDates[i][11]);
+                kLineData.setKdj_d((double) kLineRemoteDates[i][12]);
+                kLineData.setKdj_j((double) kLineRemoteDates[i][13]);
+                kLineData.setRsi1((double) kLineRemoteDates[i][14]);
+                kLineData.setRsi2((double) kLineRemoteDates[i][15]);
+                kLineData.setRsi3((double) kLineRemoteDates[i][16]);
+                kLineData.setBias1((double) kLineRemoteDates[i][17]);
+                kLineData.setBias2((double) kLineRemoteDates[i][18]);
+                kLineData.setBias3((double) kLineRemoteDates[i][19]);
+                kLineData.setType(types[type]);
+
+                kLineDates.add(kLineData);
+            }
 
         return kLineDates;
 

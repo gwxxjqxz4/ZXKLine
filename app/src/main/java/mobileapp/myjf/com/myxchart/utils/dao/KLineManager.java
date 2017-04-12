@@ -20,9 +20,7 @@ public class KLineManager {
      */
     public static void writeKLineDatas(Context context, List<KLineData> kLineDatas) {
         // 将全部数据插入到数据库中
-        for (KLineData kLineData : kLineDatas) {
-            DBManager.getInstance(context).insertKLineData(kLineData);
-        }
+        DBManager.getInstance(context).insertKLineDataList(kLineDatas);
     }
 
     /**

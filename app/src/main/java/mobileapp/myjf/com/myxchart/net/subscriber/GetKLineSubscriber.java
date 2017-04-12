@@ -1,7 +1,6 @@
 package mobileapp.myjf.com.myxchart.net.subscriber;
 
 import android.app.Activity;
-import android.util.Log;
 
 import java.util.List;
 
@@ -51,7 +50,6 @@ public class GetKLineSubscriber extends DefaultSubscriber<KLineOriginal> {
     public void onNext(final KLineOriginal kLineOriginal) {
         super.onNext(kLineOriginal);
 
-        Log.e("新接口","接口返回的数据为：" + kLineOriginal.toString());
         // 开启一个子线程来处理数据以保证流畅性
         new Thread(new Runnable() {
             @Override
@@ -59,7 +57,7 @@ public class GetKLineSubscriber extends DefaultSubscriber<KLineOriginal> {
                 // 将网络中请求到的数据转换成适于保存和操作的本地数据并缓存
                 List<KLineData> kLineDatas = OriginalToLocal.getKLineLocal(kLineOriginal, type);
                 // 将数据缓存到数据库中
-                KLineManager.addKLineDatas(activity, kLineDatas);
+                KLineManager.writeKLineDatas(activity, kLineDatas);
                 // 从数据库中读取数据
                 List<KLineData> dbKLineDatas = KLineManager.queryKLineDatas(activity, Constants.getKLineTypes[type]);
                 // 绘制K线图及副图（绘制方法中包含了页面切换监测，决定是否显示新数据）

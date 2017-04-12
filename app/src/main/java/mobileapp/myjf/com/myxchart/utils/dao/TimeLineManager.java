@@ -1,7 +1,9 @@
 package mobileapp.myjf.com.myxchart.utils.dao;
 
 import android.content.Context;
+import android.util.Log;
 
+import java.util.Date;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineOriginal;
@@ -22,10 +24,8 @@ public class TimeLineManager {
     public static void writeTimeLineRemotes(Context context, TimeLineOriginal<TimeLineRemote> timeLineOriginal) {
         // 获取服务器返回的全部数据
         List<TimeLineRemote> timeLineRemotes = timeLineOriginal.getEntity();
-        // 将全部数据插入到数据库中
-        for (TimeLineRemote timeLineRemote : timeLineRemotes) {
-            DBManager.getInstance(context).insertTimeLineRemote(timeLineRemote);
-        }
+
+        DBManager.getInstance(context).insertTimeLineRemoteList(timeLineRemotes);
     }
 
     /**

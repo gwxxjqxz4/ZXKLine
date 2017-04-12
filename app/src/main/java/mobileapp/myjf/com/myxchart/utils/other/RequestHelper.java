@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import java.util.Date;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.net.domain.AddKLineOriginal;
@@ -15,6 +16,7 @@ import mobileapp.myjf.com.myxchart.net.domain.GetTimeLineOriginal;
 import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineRemote;
 import mobileapp.myjf.com.myxchart.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.net.subscriber.AddKLineSubscriber;
+import mobileapp.myjf.com.myxchart.net.subscriber.AddTimeLineSubscriber;
 import mobileapp.myjf.com.myxchart.utils.draw.DrawKLine;
 import mobileapp.myjf.com.myxchart.utils.draw.DrawSecondary;
 import mobileapp.myjf.com.myxchart.net.subscriber.GetKLineSubscriber;
@@ -41,10 +43,15 @@ public class RequestHelper {
      * @param activity 上下文对象
      */
     public static void getTimeLineDatas(Activity activity) {
+
         // 从数据库中获取分时线数据的本地缓存
+        long date1 = new Date(System.currentTimeMillis()).getTime();
+        Log.e("性能优化","查询数据库的时间：" + date1);
         List<TimeLineRemote> timeLineRemotes = TimeLineManager.queryTimeLineRemotes(activity);
         // 若数据库中没有数据或获取到的数据列表长度小于3则向服务器请求全部数据
         if (timeLineRemotes == null || timeLineRemotes.size() < 3) {
+            long date2 = new Date(System.currentTimeMillis()).getTime();
+            Log.e("性能优化","发起请求的时间" + date2);
             // 构造请求对象
             GetTimeLineOriginal getTimeLineList = new GetTimeLineOriginal();
             // 设置机构代码
@@ -93,7 +100,7 @@ public class RequestHelper {
                 // 设置请求时间戳（设为倒数第二条避免漏取）
                 addTimeLineOriginal.setOpenTime(timeLineRemotes.get(timeLineRemotes.size() - 2).getOpenTime());
                 // 执行请求并设置处理服务器响应的类
-                addTimeLineOriginal.execute(new GetTimeLineSubscriber(activity));
+                addTimeLineOriginal.execute(new AddTimeLineSubscriber(activity));
                 // 渲染背景框
                 if (!hasTimeLineBackground) {
                     RefreshHelper.refreshTimeLineBackground(activity);

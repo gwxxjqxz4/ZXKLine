@@ -72,9 +72,9 @@ public class AddKLineOriginal extends UseCase {
 
 
     @Override
-    protected Observable<CommonEntity<KLineOriginal>> buildUseCaseObservable() {
+    protected Observable<CommonEntity<double[][]>> buildUseCaseObservable() {
         ApiService service = TimeLineRestClient.getInstance();
         DataStore dataStore = new RemoteDataStore(service);
-        return dataStore.addKLineData(organizationCode, productCode, token, type, openTime);
+        return dataStore.addKLineData(organizationCode, productCode, token, openTime, type);
     }
 }

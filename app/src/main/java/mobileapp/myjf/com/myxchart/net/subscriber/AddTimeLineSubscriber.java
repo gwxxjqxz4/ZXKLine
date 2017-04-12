@@ -6,27 +6,22 @@ import android.util.Log;
 import java.util.Date;
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.entity.localdata.TimeLineLocal;
-import mobileapp.myjf.com.myxchart.entity.render.TimeLineRender;
-import mobileapp.myjf.com.myxchart.utils.calculation.LocalToView;
-import mobileapp.myjf.com.myxchart.utils.calculation.OriginalToLocal;
-import mobileapp.myjf.com.myxchart.utils.draw.DrawTimeLine;
 import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineOriginal;
 import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineRemote;
 import mobileapp.myjf.com.myxchart.entity.util.CommonEntity;
 import mobileapp.myjf.com.myxchart.net.interactor.DefaultSubscriber;
 import mobileapp.myjf.com.myxchart.utils.dao.TimeLineManager;
-import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
+import mobileapp.myjf.com.myxchart.utils.draw.DrawTimeLine;
 
 /**
  * Created by gwx
  */
 
-public class GetTimeLineSubscriber extends DefaultSubscriber<CommonEntity<TimeLineOriginal<TimeLineRemote>>> {
+public class AddTimeLineSubscriber extends DefaultSubscriber<CommonEntity<TimeLineOriginal<TimeLineRemote>>> {
 
     private Activity activity;
 
-    public GetTimeLineSubscriber(Activity activity) {
+    public AddTimeLineSubscriber(Activity activity) {
         this.activity = activity;
     }
 
@@ -49,7 +44,7 @@ public class GetTimeLineSubscriber extends DefaultSubscriber<CommonEntity<TimeLi
                 long date2 = new Date(System.currentTimeMillis()).getTime();
                 Log.e("性能优化","开始写入数据库的时间：" + date2);
                 // 将服务器的原始数据缓存到数据库中
-                TimeLineManager.writeTimeLineRemotes(activity, timeLineOriginal);
+                TimeLineManager.addTimeLineRemotes(activity, timeLineOriginal);
                 long date3 = new Date(System.currentTimeMillis()).getTime();
                 Log.e("性能优化","写入完成的时间：" + date3);
                 // 从数据库中读取数据

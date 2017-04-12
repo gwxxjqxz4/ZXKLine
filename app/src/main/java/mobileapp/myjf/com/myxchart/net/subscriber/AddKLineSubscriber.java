@@ -19,7 +19,7 @@ import mobileapp.myjf.com.myxchart.utils.global.Constants;
  * Created by gwx
  */
 
-public class AddKLineSubscriber extends DefaultSubscriber<CommonEntity<KLineOriginal>> {
+public class AddKLineSubscriber extends DefaultSubscriber<CommonEntity<double[][]>> {
 
     private Activity activity;
     // 用户选择的标题栏项(本次请求获得的数据类型)
@@ -49,17 +49,16 @@ public class AddKLineSubscriber extends DefaultSubscriber<CommonEntity<KLineOrig
      * @param commonEntity 解析得到的结果对象
      */
     @Override
-    public void onNext(final CommonEntity<KLineOriginal> commonEntity) {
+    public void onNext(final CommonEntity<double[][]> commonEntity) {
         super.onNext(commonEntity);
 
-        Log.e("新接口", "接口返回的数据为：" + commonEntity.toString());
         Log.e("新接口", "接口返回的数据为：" + commonEntity.getEntity().toString());
         // 开启一个子线程来处理数据以保证流畅性
         new Thread(new Runnable() {
             @Override
             public void run() {
                 // 将网络中请求到的数据转换成适于保存和操作的本地数据并缓存
-                List<KLineData> kLineDatas = OriginalToLocal.getKLineLocal(commonEntity.getEntity(), type);
+                List<KLineData> kLineDatas = OriginalToLocal.addKLineLocal(commonEntity, type);
                 // 将数据缓存到数据库中
                 KLineManager.addKLineDatas(activity, kLineDatas);
                 // 从数据库中读取数据

@@ -40,8 +40,8 @@ public class RemoteDataStore implements DataStore {
     }
 
     @Override
-    public Observable<CommonEntity<KLineOriginal>> addKLineData(String token, String list_start, String pageid, String type, long openTime) {
-        return apiService.addKLineData(token, list_start, pageid, openTime, token);
+    public Observable<CommonEntity<double[][]>> addKLineData(String organizationCode, String productCode, String token, long openTime, String type) {
+        return apiService.addKLineData(organizationCode, productCode, token, openTime, type);
     }
 
 }

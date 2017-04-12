@@ -10,7 +10,7 @@ import java.io.Serializable;
  *
  * @param <T>   响应中数据的类型
  */
-public class CommonEntity<T> implements Serializable {
+public class AddKLineEntity<T> implements Serializable {
 
     // 响应的状态
     @SerializedName("status")
@@ -23,7 +23,7 @@ public class CommonEntity<T> implements Serializable {
     private  String message;
     // 响应的数据
     @SerializedName("entity")
-    private T entity;
+    private String entity;
 
     public String getMessage() {
         return message;
@@ -49,11 +49,11 @@ public class CommonEntity<T> implements Serializable {
         this.action = action;
     }
 
-    public T getEntity() {
+    public String getEntity() {
         return entity;
     }
 
-    public void setEntity(T entity) {
+    public void setEntity(String entity) {
         this.entity = entity;
     }
 
