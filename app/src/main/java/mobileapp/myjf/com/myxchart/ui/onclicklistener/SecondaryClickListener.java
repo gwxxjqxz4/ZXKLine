@@ -9,12 +9,10 @@ import android.widget.TextView;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.R;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
-import mobileapp.myjf.com.myxchart.data.global.Cache;
-import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
-import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
-import mobileapp.myjf.com.myxchart.data.global.Variable;
-import mobileapp.myjf.com.myxchart.render.draw.DrawSecondary;
+import mobileapp.myjf.com.myxchart.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
+import mobileapp.myjf.com.myxchart.utils.draw.DrawSecondary;
 import mobileapp.myjf.com.myxchart.utils.dao.KLineManager;
 
 /**
@@ -93,7 +91,7 @@ public class SecondaryClickListener implements View.OnClickListener {
         clearStatus();
 
         List<KLineData> kLineDatas = KLineManager.queryKLineDatas(activity,types[Variable.getSelectedType()]);
-        DrawSecondary.drawSecondary(activity,kLineDatas);
+        DrawSecondary.drawSecondary(activity,kLineDatas,Variable.getSelectedType());
 
 
         ((TextView) titles.get(secondaryType).getChildAt(0)).setTextColor(Color.WHITE);

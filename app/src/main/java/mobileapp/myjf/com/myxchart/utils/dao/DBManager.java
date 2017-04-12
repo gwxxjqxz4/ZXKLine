@@ -5,8 +5,8 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineRemote;
+import mobileapp.myjf.com.myxchart.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.greendao.gen.DaoMaster;
 import mobileapp.myjf.com.myxchart.greendao.gen.DaoSession;
 import mobileapp.myjf.com.myxchart.greendao.gen.KLineDataDao;

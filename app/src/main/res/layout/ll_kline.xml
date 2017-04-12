@@ -29,7 +29,7 @@
     </LinearLayout>
 
     <!-- K线主图布局，用于加载K线图控件 -->
-    <mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout
+    <RelativeLayout
         android:id="@+id/layout_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -51,7 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout>
+    </RelativeLayout>
 
     <!-- 容纳副图指标按钮的布局 -->
     <LinearLayout
@@ -133,7 +133,7 @@
     </LinearLayout>
 
     <!-- K线副图布局，用于加载K线副图控件 -->
-    <mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout
+    <RelativeLayout
         android:id="@+id/layout_secondary"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -155,6 +155,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout>
+    </RelativeLayout>
 
 </LinearLayout>

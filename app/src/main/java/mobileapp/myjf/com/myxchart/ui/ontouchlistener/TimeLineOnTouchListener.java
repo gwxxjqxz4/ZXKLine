@@ -5,15 +5,16 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.RelativeLayout;
 
 import java.util.Date;
 
-import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
-import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
+import mobileapp.myjf.com.myxchart.entity.render.TimeLineRender;
+import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
+import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView;
 import mobileapp.myjf.com.myxchart.ui.MainActivity;
-import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
+import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
 
 /**
  * Created by gwx
@@ -49,21 +50,23 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, final MotionEvent event) {
-        Log.e("TimeLineHighLight","分时线触摸事件正确获取");
+        Log.e("TimeLineHighLight", "分时线触摸事件正确获取");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if(timeLineHighLightView == null){
+                if (timeLineHighLightView == null) {
                     timeLineHighLightView = new TimeLineHighLightView(activity);
                 }
-                if(isFirstClick){
+                if (isFirstClick) {
                     isFirstClick = false;
                     firstClickTime = new Date(System.currentTimeMillis()).getTime();
-                }else{
+                } else {
                     long secondClickTime = new Date(System.currentTimeMillis()).getTime();
-                    if(secondClickTime - firstClickTime < 300){
-                        Intent intent = new Intent(activity, MainActivity.class);
-                        activity.startActivity(intent);
-                    }else{
+                    if (secondClickTime - firstClickTime < 300) {
+                        if (!(activity instanceof FullScreenActivity)) {
+                            Intent intent = new Intent(activity, FullScreenActivity.class);
+                            activity.startActivity(intent);
+                        }
+                    } else {
                         isFirstClick = false;
                         firstClickTime = new Date(System.currentTimeMillis()).getTime();
                     }
@@ -87,7 +90,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                                 // 设置长按状态为true
                                 isLongClick = true;
                                 isJudge = false;
-                                Log.e("TimeLineHighLight","分时线长按事件正确触发");
+                                Log.e("TimeLineHighLight", "分时线长按事件正确触发");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -103,7 +106,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                 // 若长按状态变量为true表明是长按事件，每次移动更新界面
                 if (isLongClick == true) {
 
-                    RefreshHelper.refreshTimeLineHighLight(activity,timeLineRender,event.getX());
+                    RefreshHelper.refreshTimeLineHighLight(activity, timeLineRender, event.getX());
 
                 }
 
@@ -111,7 +114,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                 break;
             case MotionEvent.ACTION_UP:
                 // 传入空数据刷新，隐藏分时线高亮
-                RefreshHelper.refreshTimeLineHighLight(activity,null,0);
+                RefreshHelper.refreshTimeLineHighLight(activity, null, 0);
                 isLongClick = false;
                 isNoMove = true;
                 isJudge = false;

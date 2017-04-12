@@ -12,8 +12,8 @@ import android.view.View;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
-import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.util.TimeLinePoint;
+import mobileapp.myjf.com.myxchart.entity.render.TimeLineRender;
+import mobileapp.myjf.com.myxchart.entity.util.TimeLinePoint;
 
 /**
  * create by gwx
@@ -81,8 +81,18 @@ public class TimeLineView extends View {
 
                 path.lineTo(stopX, stopY);
             }
+
+
+            paint.setColor(0xFFDDDDDD);
+            path.lineTo((float) timeLinePoints.get(timeLinePoints.size() - 1).getCoordinateX(), height);
+            path.lineTo(0, height);
+            path.lineTo(0, (float) timeLinePoints.get(0).getCoordinateY());
+
+            canvas.drawPath(path, paint);
+
             // 设置画笔的字体大小
             paint.setTextSize(PXUtils.dip2px(context, 8));
+            paint.setColor(Color.BLACK);
             canvas.drawText(timeLineRender.getTopPrice() + "", PXUtils.dip2px(context, 3), PXUtils.dip2px(context, 7), paint);
             canvas.drawText(timeLineRender.getAbovePrice() + "", PXUtils.dip2px(context, 3), height / 4 + PXUtils.dip2px(context, 3), paint);
             canvas.drawText(timeLineRender.getMidPrice() + "", PXUtils.dip2px(context, 3), height / 4 * 2 + PXUtils.dip2px(context, 3), paint);
@@ -95,12 +105,6 @@ public class TimeLineView extends View {
             canvas.drawText(timeLineRender.getUnderPercent() + "%", getWidth() - PXUtils.dip2px(context, 26), height / 4 * 3 + PXUtils.dip2px(context, 3), paint);
             canvas.drawText(timeLineRender.getBottomPercent() + "%", getWidth() - PXUtils.dip2px(context, 26), height - PXUtils.dip2px(context, 1), paint);
 
-            paint.setColor(0xFFDDDDDD);
-            path.lineTo((float) timeLinePoints.get(timeLinePoints.size() - 1).getCoordinateX(), height);
-            path.lineTo(0, height);
-            path.lineTo(0, (float) timeLinePoints.get(0).getCoordinateY());
-
-            canvas.drawPath(path, paint);
         }
         super.onDraw(canvas);
     }

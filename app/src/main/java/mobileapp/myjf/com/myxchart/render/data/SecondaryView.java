@@ -6,16 +6,15 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.data.entity.util.KLinePoint;
+import mobileapp.myjf.com.myxchart.entity.util.KLinePoint;
 import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
-import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
+import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
+import mobileapp.myjf.com.myxchart.entity.util.KLineItem;
 
 /**
  * create by gwx
@@ -108,7 +107,7 @@ public class SecondaryView extends View {
                 }
 
                 paint.setColor(Color.BLACK);
-                canvas.drawText(kLineRender.getMacdTop() + "", 0, 0, paint);
+                canvas.drawText(kLineRender.getMacdTop() + "", 0, getHeight() / 10, paint);
                 canvas.drawText(kLineRender.getMacdBottom() + "", 0, getHeight(), paint);
         }else if(secondaryType > 0 && secondaryType <= 3){
             // 非空判断，若传入数据为空则清除主图数据
@@ -133,7 +132,7 @@ public class SecondaryView extends View {
 
                 // 获取每个点的数据
                 if (secondaryType == 1) {
-                    canvas.drawText(kLineRender.getRsiTop() + "", 0, 0, paint);
+                    canvas.drawText(kLineRender.getRsiTop() + "", 0, getHeight() / 10, paint);
                     canvas.drawText(kLineRender.getRsiBottom() + "", 0, getHeight(), paint);
                     for (int i = 0; i < kLineItems.size(); i++) {
                         firstLinePoints.add(kLineItems.get(i).getRsi1Point());
@@ -141,7 +140,7 @@ public class SecondaryView extends View {
                         lastLinePoints.add(kLineItems.get(i).getBias3Point());
                     }
                 } else if (secondaryType == 2) {
-                    canvas.drawText(kLineRender.getBiasTop() + "", 0, 0, paint);
+                    canvas.drawText(kLineRender.getBiasTop() + "", 0, getHeight() / 10, paint);
                     canvas.drawText(kLineRender.getRsiBottom() + "", 0, getHeight(), paint);
                     for (int i = 0; i < kLineItems.size(); i++) {
                         firstLinePoints.add(kLineItems.get(i).getBias1Point());
@@ -149,7 +148,7 @@ public class SecondaryView extends View {
                         lastLinePoints.add(kLineItems.get(i).getBias3Point());
                     }
                 } else if (secondaryType == 3) {
-                    canvas.drawText(kLineRender.getKdjTop() + "", 0, 0, paint);
+                    canvas.drawText(kLineRender.getKdjTop() + "", 0, getHeight() / 10, paint);
                     canvas.drawText(kLineRender.getKdjBottom() + "", 0, getHeight(), paint);
                     for (int i = 0; i < kLineItems.size(); i++) {
                         firstLinePoints.add(kLineItems.get(i).getKdj_dPoint());

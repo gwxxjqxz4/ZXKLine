@@ -1,8 +1,6 @@
 package mobileapp.myjf.com.myxchart.utils.calculation;
 
 import android.app.Activity;
-import android.content.Context;
-import android.util.Log;
 
 import com.google.gson.Gson;
 
@@ -10,16 +8,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
-import mobileapp.myjf.com.myxchart.data.entity.localdata.TimeLineLocal;
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.KLineOriginal;
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineOriginal;
-import mobileapp.myjf.com.myxchart.data.entity.util.TimeLineData;
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
-import mobileapp.myjf.com.myxchart.data.global.Variable;
-import mobileapp.myjf.com.myxchart.utils.dao.KLineManager;
-import mobileapp.myjf.com.myxchart.utils.dao.TimeLineManager;
+import mobileapp.myjf.com.myxchart.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.entity.localdata.TimeLineLocal;
+import mobileapp.myjf.com.myxchart.entity.originaldata.KLineOriginal;
+import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineOriginal;
+import mobileapp.myjf.com.myxchart.entity.util.TimeLineData;
+import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineRemote;
 
 /**
  * create by gwx
@@ -34,10 +28,8 @@ public class OriginalToLocal {
      * @param activity
      * @return
      */
-    public static TimeLineLocal getTimeLineLocal(TimeLineOriginal<TimeLineRemote> timeLineOriginal, Activity activity) {
+    public static TimeLineLocal getTimeLineLocal(List<TimeLineRemote> timeLineRemotes,TimeLineOriginal<TimeLineRemote> timeLineOriginal, Activity activity) {
 
-        // 从数据库中取出保存每个时间点数据的列表
-        List<TimeLineRemote> timeLineRemotes = TimeLineManager.queryTimeLineRemotes(activity);
         // 用于记录分时线中的最大价格
         double maxPrice = timeLineRemotes.get(0).getClose();
         // 用于记录分时线中的最小价格
@@ -148,7 +140,7 @@ public class OriginalToLocal {
      * @param kLineOriginal     服务器返回的数据
      * @return
      */
-    public static KLineLocal getKLineLocal(KLineOriginal kLineOriginal,int type){
+    public static List<KLineData> getKLineLocal(KLineOriginal kLineOriginal,int type){
 
         // K线数据的类型
         String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
@@ -190,10 +182,7 @@ public class OriginalToLocal {
             kLineDates.add(kLineData);
         }
 
-        KLineLocal kLineLocal = new KLineLocal();
-        kLineLocal.setkLineDatas(kLineDates);
-
-        return kLineLocal;
+        return kLineDates;
 
     }
 

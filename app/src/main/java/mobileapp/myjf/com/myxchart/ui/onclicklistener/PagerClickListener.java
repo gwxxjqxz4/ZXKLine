@@ -2,54 +2,45 @@ package mobileapp.myjf.com.myxchart.ui.onclicklistener;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
-import java.util.TooManyListenersException;
 
 import mobileapp.myjf.com.myxchart.R;
-import mobileapp.myjf.com.myxchart.data.domain.AddKLineOriginal;
-import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
-import mobileapp.myjf.com.myxchart.data.global.Data;
-import mobileapp.myjf.com.myxchart.render.draw.DrawSecondary;
-import mobileapp.myjf.com.myxchart.ui.ontouchlistener.KLineOnTouchListener;
-import mobileapp.myjf.com.myxchart.ui.subscriber.AddKLineSubscriber;
 import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
-import mobileapp.myjf.com.myxchart.data.global.Cache;
-import mobileapp.myjf.com.myxchart.data.domain.GetKLineOriginal;
-import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
-import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
-import mobileapp.myjf.com.myxchart.data.global.Variable;
-import mobileapp.myjf.com.myxchart.render.draw.DrawKLine;
-import mobileapp.myjf.com.myxchart.ui.subscriber.GetKLineSubscriber;
-import mobileapp.myjf.com.myxchart.utils.dao.KLineManager;
-import mobileapp.myjf.com.myxchart.utils.dao.StampJudgement;
-import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
+import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
+import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
+import mobileapp.myjf.com.myxchart.utils.other.RequestHelper;
 
 /**
  * Created by gwx
+ * 图表类型栏的点击事件监听，根据用户点击的图表类型（如分时、日K、60分等）进行相应处理
  */
 
 public class PagerClickListener implements View.OnClickListener {
 
+    // 上下文对象
     private Activity activity;
+    // 图表类型标题栏
     private List<TextView> titles;
+    // 标题栏指示器
     private List<View> titleIndectors;
+    // 分时线布局
     private RelativeLayout timeLineLayout;
+    // K线布局
     private LinearLayout kLineLayout;
+    // 图表类型选择器滑动控件
     private HorizontalScrollView pagerSelecter;
+    // 有无背景框
     private boolean hasBackground = false;
 
+    // 构造方法，获取上个界面传来的上下文以及初始化控件对象
     public PagerClickListener(Activity activity) {
-
         this.activity = activity;
         titles = GlobalViewsUtil.getTitles(activity);
         titleIndectors = GlobalViewsUtil.getTitleIndectors(activity);
@@ -59,11 +50,18 @@ public class PagerClickListener implements View.OnClickListener {
 
     }
 
+    /**
+     * 点击事件处理方法
+     *
+     * @param v 被点击的按钮
+     */
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.tv_fenshi:
+                // 界面选择器滚动布局移到相应位置使被选择项居中
                 pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 0), 0);
+                // 处理其他逻辑
                 setTab(0);
                 break;
             case R.id.tv_rik:
@@ -101,10 +99,52 @@ public class PagerClickListener implements View.OnClickListener {
         }
     }
 
+    /**
+     * 接收到点击事件时的处理方法
+     *
+     * @param index 被点击的按钮索引
+     */
+    private void setTab(int index) {
+        // 重置界面状态（图表类型栏、副图类型栏、内容）
+        clearStatus();
+        // 改变被选择项的字体颜色
+        titles.get(index).setTextColor(Color.RED);
+        // 显示被选择项的指示器
+        titleIndectors.get(index).setVisibility(View.VISIBLE);
+        // 若被选择项为分时线则隐藏K线布局，显示分时线布局，否则做相反处理
+        if (index == 0) {
+            // 请求服务器数据并刷新分时线布局
+            RequestHelper.getTimeLineDatas(activity);
+            // 显示分时线布局
+            timeLineLayout.setVisibility(View.VISIBLE);
+            // 隐藏K线布局
+            kLineLayout.setVisibility(View.INVISIBLE);
+        } else if (index <= 8 && index > 0) {
+            // 请求K线数据（通过数据库、服务器）
+            RequestHelper.getKLineDatas(activity, index);
+            // 若第一次点击进入K线界面则渲染K线及副图背景
+            if (!hasBackground) {
+                RefreshHelper.refreshSecondaryBackground(activity);
+                RefreshHelper.refreshMainBackground(activity);
+                // 记录渲染状态，不做重复渲染
+                hasBackground = true;
+            }
+            // 隐藏分时线布局
+            timeLineLayout.setVisibility(View.INVISIBLE);
+            // 显示K线布局
+            kLineLayout.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 重置页面状态的方法，使图表类型栏、标题栏处于未选择状态，清理图表内容
+     */
     private void clearStatus() {
+        // 遍历标题栏设置字体颜色
         for (TextView tv : titles) {
             tv.setTextColor(Color.BLACK);
         }
+        // 遍历标题栏隐藏所有指示器
         for (View v : titleIndectors) {
             v.setVisibility(View.GONE);
         }
@@ -114,117 +154,16 @@ public class PagerClickListener implements View.OnClickListener {
         // 清除主图和副图数据
         RefreshHelper.refreshMainView(activity, null);
         RefreshHelper.refreshSecondaryView(activity, null, 0);
-    }
 
-    private void setTab(int index) {
-        clearStatus();
-        clearSecondaryStatus();
-        titles.get(index).setTextColor(Color.RED);
-        titleIndectors.get(index).setVisibility(View.VISIBLE);
-        switch (index) {
-            case 0:
-                timeLineLayout.setVisibility(View.VISIBLE);
-                kLineLayout.setVisibility(View.INVISIBLE);
-                break;
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-                initKLineDatas(index);
-                if (!hasBackground) {
-                    RefreshHelper.refreshSecondaryBackground(activity);
-                    RefreshHelper.refreshMainBackground(activity);
-                    hasBackground = true;
-                }
-                timeLineLayout.setVisibility(View.INVISIBLE);
-                kLineLayout.setVisibility(View.VISIBLE);
-
-                break;
-        }
-
-    }
-
-    private void initKLineDatas(int type) {
-
-        Variable.setSelectedType(type);
-
-        Variable.setSelectedType(type);
-        String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
-        String[] newTypes = new String[]{"","1440","60","10080","432000","1","5","30","240"};
-
-        Log.e("数据库中本类型数据量",KLineManager.queryKLineDatas(activity,types[type]) + "");
-        // 如果数据库中没有该类数据或条目数量为0则直接请求旧接口插入数据
-        if(KLineManager.queryKLineDatas(activity,types[type]) == null || KLineManager.queryKLineDatas(activity,types[type]).size() == 0){
-
-            GetKLineOriginal getKLineList = new GetKLineOriginal();
-            getKLineList.setType(types[type]);
-            getKLineList.setSyncOrgCode("QL");
-            getKLineList.setProductCode("QLOIL10T");
-            getKLineList.execute(new GetKLineSubscriber(activity, type));
-            kLineLayout.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return false;
-                }
-            });
-        }else{
-            List<KLineData> kLineDatas1 = KLineManager.queryKLineDatas(activity,types[2]);
-            Log.e("数据库清理使用的时间戳","使用的时间戳为" + kLineDatas1.get(kLineDatas1.size() - 1).toString() + "乘1000");
-            // 若数据库中有昨天的数据则清除数据库并请求网络
-            if(StampJudgement.isYesterdayData(kLineDatas1.get(kLineDatas1.size() - 1).getTime())){
-                KLineManager.deleteAllDatas(activity);
-                Log.e("清理后本类型数据量",KLineManager.queryKLineDatas(activity,types[type]) + "");
-                GetKLineOriginal getKLineList = new GetKLineOriginal();
-                getKLineList.setType(types[type]);
-                getKLineList.setSyncOrgCode("QL");
-                getKLineList.setProductCode("QLOIL10T");
-                getKLineList.execute(new GetKLineSubscriber(activity, type));
-                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return false;
-                    }
-                });
-            }
-            // 若数据库中只有今天的数据则请求新接口并添加数据,并优先将已有数据渲染
-            else{
-                List<KLineData> kLineDatas = KLineManager.queryKLineDatas(activity,types[type]);
-                int selectedType = Variable.getSelectedType();
-                if (type == selectedType) {
-                    DrawKLine.drawKLine(activity, kLineDatas);
-                    DrawSecondary.drawSecondary(activity, kLineDatas);
-                }
-                AddKLineOriginal addKLineOriginal = new AddKLineOriginal();
-                addKLineOriginal.setOrganizationCode("QL");
-                addKLineOriginal.setProductCode("QLOIL10T");
-                long time = KLineManager.queryKLineDatas(activity,types[type]).get(KLineManager.queryKLineDatas(activity,types[type]).size() - 1).getTime();
-                addKLineOriginal.setOpenTime(time);
-                addKLineOriginal.setType(newTypes[type]);
-                addKLineOriginal.setToken("IOSMOBILECLIENT");
-                Log.e("请求用的参数：","请求用的参数:" + "机构代码 = " + "QL" + "，商品代码 = " + "QLOIL10T" + "，时间 = " +time + "，类型 = " + newTypes[type] + "，令牌 =" + "IOSMOBILECLIENT");
-                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return false;
-                    }
-                });
-                addKLineOriginal.execute(new AddKLineSubscriber(activity,type));
-            }
-        }
-
-    }
-
-    private void clearSecondaryStatus() {
-
+        // 获取副图类型选择控件
         List<RelativeLayout> types = GlobalViewsUtil.getTypes(activity);
-
+        // 遍历副图类型选择控件
         for (RelativeLayout rl : types) {
+            // 字体颜色初始化
             ((TextView) rl.getChildAt(0)).setTextColor(Color.BLACK);
+            // 文字背景初始化
             rl.setBackgroundColor(Color.WHITE);
+            // 设置被选择的副图类型为MACD
             Variable.setSecondaryType(0);
         }
     }

@@ -36,7 +36,7 @@ public class TimeLineBackgroundView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         // 分时线图所占高度（剩余部分为日期所占高度）
-        float height = getHeight() / 20 * 19;
+        float height = getHeight()  / 20 * 19;
         // 声明画笔
         Paint paint = new Paint();
         // 设置抗锯齿为true
@@ -64,13 +64,13 @@ public class TimeLineBackgroundView extends View {
         // 设置画出的日期字体大小
         paint.setTextSize(PXUtils.dip2px(context, 8));
         // 画出日期文字
-        canvas.drawText("06:01", 0, getHeight() / 40 * 39, paint);
-        canvas.drawText("10:00", getWidth() / 6 - (PXUtils.dip2px(context, 8)), getHeight() / 40 * 39, paint);
-        canvas.drawText("14:00", getWidth() / 6 * 2 - (PXUtils.dip2px(context, 8)), getHeight() / 40 * 39, paint);
-        canvas.drawText("18:00", getWidth() / 6 * 3 - (PXUtils.dip2px(context, 8)), getHeight() / 40 * 39, paint);
-        canvas.drawText("22:00", getWidth() / 6 * 4 - (PXUtils.dip2px(context, 8)), getHeight() / 40 * 39, paint);
-        canvas.drawText("02:00", getWidth() / 6 * 5 - (PXUtils.dip2px(context, 8)), getHeight() / 40 * 39, paint);
-        canvas.drawText("06:00", getWidth() / 6 * 6 - (PXUtils.dip2px(context, 21)), getHeight() / 40 * 39, paint);
+        canvas.drawText("06:01", 0, getHeight(), paint);
+        canvas.drawText("10:00", getWidth() / 6 - (PXUtils.dip2px(context, 8)), getHeight(), paint);
+        canvas.drawText("14:00", getWidth() / 6 * 2 - (PXUtils.dip2px(context, 8)), getHeight(), paint);
+        canvas.drawText("18:00", getWidth() / 6 * 3 - (PXUtils.dip2px(context, 8)), getHeight(), paint);
+        canvas.drawText("22:00", getWidth() / 6 * 4 - (PXUtils.dip2px(context, 8)), getHeight(), paint);
+        canvas.drawText("02:00", getWidth() / 6 * 5 - (PXUtils.dip2px(context, 8)), getHeight(), paint);
+        canvas.drawText("06:00", getWidth() / 6 * 6 - (PXUtils.dip2px(context, 21)), getHeight(), paint);
         super.onDraw(canvas);
     }
 }

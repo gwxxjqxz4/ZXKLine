@@ -5,24 +5,22 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import java.util.Date;
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
 import mobileapp.myjf.com.myxchart.utils.calculation.LocalToView;
-import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
-import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
-import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
-import mobileapp.myjf.com.myxchart.data.global.Variable;
+import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
+import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
 import mobileapp.myjf.com.myxchart.render.data.KLineView;
-import mobileapp.myjf.com.myxchart.render.data.SecondaryView;
 import mobileapp.myjf.com.myxchart.render.highlight.KLineHighLightView;
 import mobileapp.myjf.com.myxchart.render.highlight.SecondaryHighLight;
 import mobileapp.myjf.com.myxchart.ui.MainActivity;
-import mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout;
-import mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout;
-import mobileapp.myjf.com.myxchart.utils.uitools.RefreshHelper;
+import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
 
 /**
  * Created by gwx
@@ -52,8 +50,8 @@ public class KLineOnTouchListener implements View.OnTouchListener {
     private int itemNumber;
 
     private Activity activity;
-    private KLineMainLayout kLineMainLayout;
-    private KLineSecondaryLayout kLineSecondaryLayout;
+    private RelativeLayout kLineMainLayout;
+    private RelativeLayout kLineSecondaryLayout;
     private KLineHighLightView kLineHighLightView;
     private SecondaryHighLight secondaryHighLight;
     private KLineView kLineView;
@@ -90,8 +88,10 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                 } else {
                     long secondClickTime = new Date(System.currentTimeMillis()).getTime();
                     if (secondClickTime - firstClickTime < 300) {
-                        Intent intent = new Intent(activity, MainActivity.class);
-                        activity.startActivity(intent);
+                        if (!(activity instanceof FullScreenActivity)) {
+                            Intent intent = new Intent(activity, FullScreenActivity.class);
+                            activity.startActivity(intent);
+                        }
                     } else {
                         isFirstClick = false;
                         firstClickTime = new Date(System.currentTimeMillis()).getTime();

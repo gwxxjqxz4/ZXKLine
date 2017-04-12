@@ -4,11 +4,11 @@ import android.content.Context;
 
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineOriginal;
-import mobileapp.myjf.com.myxchart.data.entity.originaldata.TimeLineRemote;
+import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineOriginal;
+import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineRemote;
 
 /**
- * Created by nethanhan on 2017/4/10.
+ * Created by gwx
  */
 
 public class TimeLineManager {

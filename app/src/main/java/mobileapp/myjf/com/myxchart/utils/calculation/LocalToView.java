@@ -7,19 +7,16 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.data.entity.localdata.KLineLocal;
-import mobileapp.myjf.com.myxchart.data.entity.localdata.TimeLineLocal;
-import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineData;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLinePoint;
-import mobileapp.myjf.com.myxchart.data.entity.util.TimeLineData;
-import mobileapp.myjf.com.myxchart.data.entity.util.TimeLinePoint;
-import mobileapp.myjf.com.myxchart.data.global.GlobalViewsUtil;
-import mobileapp.myjf.com.myxchart.data.global.Variable;
-import mobileapp.myjf.com.myxchart.ui.layout.KLineMainLayout;
-import mobileapp.myjf.com.myxchart.ui.layout.KLineSecondaryLayout;
+import mobileapp.myjf.com.myxchart.entity.localdata.TimeLineLocal;
+import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
+import mobileapp.myjf.com.myxchart.entity.render.TimeLineRender;
+import mobileapp.myjf.com.myxchart.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.entity.util.KLineItem;
+import mobileapp.myjf.com.myxchart.entity.util.KLinePoint;
+import mobileapp.myjf.com.myxchart.entity.util.TimeLineData;
+import mobileapp.myjf.com.myxchart.entity.util.TimeLinePoint;
+import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
 
 /**
  * 对本地缓存进行计算得出渲染数据对象的类
@@ -44,6 +41,8 @@ public class LocalToView {
         // 获取容器的宽高
         double viewWidth = timeLineLayout.getWidth() - PXUtils.dip2px(activity,20);
         double viewHeight = timeLineLayout.getHeight() - PXUtils.dip2px(activity,20);
+        // 给底部时间留下空间
+        viewHeight = viewHeight * 19 / 20;
 
         // 从本地缓存对象中获取数据
         List<TimeLineData> timeLineDatas = timeLineLocal.getTimeLineDatas();
@@ -134,8 +133,8 @@ public class LocalToView {
 
         LocalToView.activity = activity;
 
-        KLineMainLayout kLineMainLayout = GlobalViewsUtil.getMainLayout(activity);
-        KLineSecondaryLayout kLineSecondaryLayout = GlobalViewsUtil.getSecondaryLayout(activity);
+        RelativeLayout kLineMainLayout = GlobalViewsUtil.getMainLayout(activity);
+        RelativeLayout kLineSecondaryLayout = GlobalViewsUtil.getSecondaryLayout(activity);
 
         int startPosition = Variable.getScrollStartPosition();
         itemNumber = Variable.getItemNumber();

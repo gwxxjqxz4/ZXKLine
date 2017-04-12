@@ -10,9 +10,9 @@ import android.view.View;
 
 import java.util.List;
 
-import mobileapp.myjf.com.myxchart.data.entity.render.KLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.util.KLineItem;
-import mobileapp.myjf.com.myxchart.data.global.Variable;
+import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
+import mobileapp.myjf.com.myxchart.entity.util.KLineItem;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
 
 /**
  * Created by gwx

@@ -12,8 +12,8 @@ import android.view.View;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
-import mobileapp.myjf.com.myxchart.data.entity.render.TimeLineRender;
-import mobileapp.myjf.com.myxchart.data.entity.util.TimeLinePoint;
+import mobileapp.myjf.com.myxchart.entity.render.TimeLineRender;
+import mobileapp.myjf.com.myxchart.entity.util.TimeLinePoint;
 
 /**
  * create by gwx
