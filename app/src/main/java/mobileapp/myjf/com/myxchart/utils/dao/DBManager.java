@@ -11,6 +11,7 @@ import mobileapp.myjf.com.myxchart.greendao.gen.DaoMaster;
 import mobileapp.myjf.com.myxchart.greendao.gen.DaoSession;
 import mobileapp.myjf.com.myxchart.greendao.gen.KLineDataDao;
 import mobileapp.myjf.com.myxchart.greendao.gen.TimeLineRemoteDao;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
 
 /**
  * Created by gwx
@@ -22,7 +23,7 @@ public class DBManager {
     private DaoMaster.DevOpenHelper openHelper;
     private static DBManager instance;
 
-    private final static String dbName = "KLineSdkDB";
+    private final static String dbName = Variable.getOrganizationCode() + Variable.getProductCode();
 
     private DBManager(Context context) {
         this.context = context;
