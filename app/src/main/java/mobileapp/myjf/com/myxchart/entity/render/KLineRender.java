@@ -1,5 +1,7 @@
 package mobileapp.myjf.com.myxchart.entity.render;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.entity.util.KLineItem;
@@ -34,104 +36,104 @@ public class KLineRender {
         this.items = items;
     }
 
-    public double getTopPrice() {
-        return topPrice;
+    public String getTopPrice() {
+        return new DecimalFormat("#0.0000").format(topPrice);
     }
 
     public void setTopPrice(double topPrice) {
         this.topPrice = topPrice;
     }
 
-    public double getBottomPrice() {
-        return bottomPrice;
+    public String getBottomPrice() {
+        return new DecimalFormat("#0.0000").format(bottomPrice);
     }
 
     public void setBottomPrice(double bottomPrice) {
         this.bottomPrice = bottomPrice;
     }
 
-    public double getAbovePrice() {
-        return abovePrice;
+    public String getAbovePrice() {
+        return new DecimalFormat("#0.0000").format(abovePrice);
     }
 
     public void setAbovePrice(double abovePrice) {
         this.abovePrice = abovePrice;
     }
 
-    public double getUnderPrice() {
-        return underPrice;
+    public String getUnderPrice() {
+        return new DecimalFormat("#0.0000").format(underPrice);
     }
 
     public void setUnderPrice(double underPrice) {
         this.underPrice = underPrice;
     }
 
-    public double getMidPrice() {
-        return midPrice;
+    public String getMidPrice() {
+        return new DecimalFormat("#0.0000").format(midPrice);
     }
 
     public void setMidPrice(double midPrice) {
         this.midPrice = midPrice;
     }
 
-    public double getMacdTop() {
-        return macdTop;
+    public String getMacdTop() {
+        return new DecimalFormat("#0.0000").format(macdTop);
     }
 
     public void setMacdTop(double macdTop) {
         this.macdTop = macdTop;
     }
 
-    public double getMacdBottom() {
-        return macdBottom;
+    public String getMacdBottom() {
+        return new DecimalFormat("#0.0000").format(macdBottom);
     }
 
     public void setMacdBottom(double macdBottom) {
         this.macdBottom = macdBottom;
     }
 
-    public double getRsiTop() {
-        return rsiTop;
+    public String getRsiTop() {
+        return new DecimalFormat("#0.0000").format(rsiTop);
     }
 
     public void setRsiTop(double rsiTop) {
         this.rsiTop = rsiTop;
     }
 
-    public double getRsiBottom() {
-        return rsiBottom;
+    public String getRsiBottom() {
+        return new DecimalFormat("#0.0000").format(rsiBottom);
     }
 
     public void setRsiBottom(double rsiBottom) {
         this.rsiBottom = rsiBottom;
     }
 
-    public double getBiasTop() {
-        return biasTop;
+    public String getBiasTop() {
+        return new DecimalFormat("#0.0000").format(biasTop);
     }
 
     public void setBiasTop(double biasTop) {
         this.biasTop = biasTop;
     }
 
-    public double getBiasBottom() {
-        return biasBottom;
+    public String getBiasBottom() {
+        return new DecimalFormat("#0.0000").format(biasBottom);
     }
 
     public void setBiasBottom(double biasBottom) {
         this.biasBottom = biasBottom;
     }
 
-    public double getKdjTop() {
-        return kdjTop;
+    public String getKdjTop() {
+        return new DecimalFormat("#0.0000").format(kdjTop);
     }
 
     public void setKdjTop(double kdjTop) {
         this.kdjTop = kdjTop;
     }
 
-    public double getKdjBottom() {
-        return kdjBottom;
+    public String getKdjBottom() {
+        return new DecimalFormat("#0.0000").format(kdjBottom);
     }
 
     public void setKdjBottom(double kdjBottom) {

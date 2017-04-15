@@ -36,40 +36,40 @@ public class TimeLineRender {
         this.points = points;
     }
 
-    public double getTopPrice() {
-        return topPrice;
+    public String getTopPrice() {
+        return new DecimalFormat("#0.0000").format(topPrice);
     }
 
     public void setTopPrice(double topPrice) {
         this.topPrice = topPrice;
     }
 
-    public double getBottomPrice() {
-        return bottomPrice;
+    public String getBottomPrice() {
+        return new DecimalFormat("#0.0000").format(bottomPrice);
     }
 
     public void setBottomPrice(double bottomPrice) {
         this.bottomPrice = bottomPrice;
     }
 
-    public double getAbovePrice() {
-        return abovePrice;
+    public String getAbovePrice() {
+        return new DecimalFormat("#0.0000").format(abovePrice);
     }
 
     public void setAbovePrice(double abovePrice) {
         this.abovePrice = abovePrice;
     }
 
-    public double getUnderPrice() {
-        return underPrice;
+    public String getUnderPrice() {
+        return new DecimalFormat("#0.0000").format(underPrice);
     }
 
     public void setUnderPrice(double underPrice) {
         this.underPrice = underPrice;
     }
 
-    public double getMidPrice() {
-        return midPrice;
+    public String getMidPrice() {
+        return new DecimalFormat("#0.0000").format(midPrice);
     }
 
     public void setMidPrice(double midPrice) {

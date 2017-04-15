@@ -9,9 +9,13 @@ import android.app.Activity;
 public class Variable {
 
     // 私有构造，防止被实例化
-    private Variable(){}
+    private Variable() {
+    }
+
     // 提供一个已经初始化好了的对象
     private static Variable variable = new Variable();
+    // 商品名称，由外界传输
+    private static String productName;
     // 令牌，由外界传输
     private static String token;
     // 机构代码，由外界传输
@@ -19,7 +23,8 @@ public class Variable {
     // 商品代码，由外界传输
     private static String productCode;
     // 用户选择的图表类型(按标题栏从左至右)
-    private static int selectedType;
+    private static int normalSelectedType = -1;
+    private static int fullSelectedType = -1;
     // 用户选择的副图类型（按标题从左至右）
     private static int secondaryType;
     // 滚动状态的开始索引
@@ -47,12 +52,20 @@ public class Variable {
         Variable.scrollStopPosition = scrollStopPosition;
     }
 
-    public static int getSelectedType() {
-        return selectedType;
+    public static int getNormalSelectedType() {
+        return normalSelectedType;
     }
 
-    public static void setSelectedType(int selectedType) {
-        Variable.selectedType = selectedType;
+    public static void setNormalSelectedType(int normalSelectedType) {
+        Variable.normalSelectedType = normalSelectedType;
+    }
+
+    public static int getFullSelectedType() {
+        return fullSelectedType;
+    }
+
+    public static void setFullSelectedType(int fullSelectedType) {
+        Variable.fullSelectedType = fullSelectedType;
     }
 
     public static int getItemNumber() {
@@ -105,5 +118,13 @@ public class Variable {
 
     public static void setProductCode(String productCode) {
         Variable.productCode = productCode;
+    }
+
+    public static String getProductName() {
+        return productName;
+    }
+
+    public static void setProductName(String productName) {
+        Variable.productName = productName;
     }
 }

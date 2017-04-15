@@ -4,24 +4,27 @@ apply plugin: 'org.greenrobot.greendao'
 android {
     signingConfigs {
         config {
-            keyAlias 'key01'
+            keyAlias 'key0'
             keyPassword 'gwx987919'
-            storeFile file('/Users/nethanhan/Desktop/MYXChart/signedkey/jks.keystore')
+            storeFile file('/Users/yuankai/Desktop/gwxsign.keystore')
             storePassword 'gwx987919'
         }
     }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
-        applicationId "mobileapp.myjf.com.myxchart"
-        minSdkVersion 17
+        minSdkVersion 15
         targetSdkVersion 22
-        versionCode 1
-        versionName "0.1"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            //混淆
+            minifyEnabled true
+            //对齐
+            zipAlignEnabled true
+            //移除无用的resource 文件
+            shrinkResources true
+            //加载默认混淆配置文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

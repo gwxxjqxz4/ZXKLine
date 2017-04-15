@@ -42,21 +42,13 @@ public class GetTimeLineSubscriber extends DefaultSubscriber<CommonEntity<TimeLi
         new Thread(new Runnable() {
             @Override
             public void run() {
-                long date1 = new Date(System.currentTimeMillis()).getTime();
-                Log.e("性能优化","收到服务器回复的时间：" + date1);
                 // 获取服务器原始数据
                 TimeLineOriginal timeLineOriginal = timeLineListCommonEntity.getEntity();
-                long date2 = new Date(System.currentTimeMillis()).getTime();
-                Log.e("性能优化","开始写入数据库的时间：" + date2);
                 // 将服务器的原始数据缓存到数据库中
                 TimeLineManager.writeTimeLineRemotes(activity, timeLineOriginal);
-                long date3 = new Date(System.currentTimeMillis()).getTime();
-                Log.e("性能优化","写入完成的时间：" + date3);
                 // 从数据库中读取数据
                 List<TimeLineRemote> timeLineRemotes = TimeLineManager.queryTimeLineRemotes(activity);
                 // 绘制K线图及副图（绘制方法中包含了页面切换监测，决定是否显示新数据）
-                long date4 = new Date(System.currentTimeMillis()).getTime();
-                Log.e("性能优化","查询完成完成的时间：" + date4);
                 DrawTimeLine.drawTimeLine(timeLineOriginal, activity, timeLineRemotes, 0);
             }
         }).start();

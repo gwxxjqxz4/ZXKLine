@@ -36,7 +36,7 @@ public class StampJudgement {
         }
 
         // 若参数时间大于6点返回false，否则返回true
-        if (time * 1000 > cal.getTimeInMillis()) {
+        if (time > cal.getTimeInMillis()) {
             Log.e("数据库清理判断","返回了false");
             Log.e("更新","完成配置");
             return false;

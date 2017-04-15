@@ -3,8 +3,10 @@ package mobileapp.myjf.com.myxchart.utils.other;
 import android.app.Activity;
 import android.widget.RelativeLayout;
 
+import mobileapp.myjf.com.myxchart.R;
 import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
 import mobileapp.myjf.com.myxchart.entity.render.TimeLineRender;
+import mobileapp.myjf.com.myxchart.render.CoverView;
 import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.render.background.KLineBackgroundView;
 import mobileapp.myjf.com.myxchart.render.background.SecondaryBackgroundView;
@@ -56,6 +58,20 @@ public class RefreshHelper {
         timeLineHighLightView.setTimeLineRender(timeLineRender);
         timeLineHighLightView.invalidate();
         timeLineLayout.addView(timeLineHighLightView);
+
+    }
+
+    public static void refreshCoverView(Activity activity, TimeLineRender timeLineRender, KLineRender kLineRender, float moveX) {
+
+        RelativeLayout coverLayout = (RelativeLayout) activity.findViewById(R.id.rl_cover);
+        CoverView coverView = (CoverView) GlobalViewsUtil.getCover(activity);
+
+        coverLayout.removeView(coverView);
+        coverView.setMoveX(moveX);
+        coverView.setTimeLineRender(timeLineRender);
+        coverView.setKLineRender(kLineRender);
+        coverView.invalidate();
+        coverLayout.addView(coverView);
 
     }
 

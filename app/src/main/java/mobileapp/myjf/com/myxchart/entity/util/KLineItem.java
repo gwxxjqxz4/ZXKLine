@@ -1,7 +1,13 @@
 package mobileapp.myjf.com.myxchart.entity.util;
 
+import android.app.Activity;
+
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
+import mobileapp.myjf.com.myxchart.utils.global.Variable;
 
 /**
  * Created by gwx
@@ -34,6 +40,9 @@ public class KLineItem {
     private KLinePoint ma30Point;
     // 收盘价
     private double price;
+    private double openPrice;
+    private double highPrice;
+    private double lowPrice;
     // 日期
     private long date;
     // 副图种类
@@ -154,11 +163,31 @@ public class KLineItem {
         this.price = price;
     }
 
-    public String getDate() {
+    public String getDate(Activity activity) {
         long temp = date * 1000;
-        Date yearmonthday = new Date(temp);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        return sdf.format(yearmonthday);
+        Date date = new Date(temp);
+        SimpleDateFormat sdf;
+        final int selectedType;
+        if (activity instanceof FullScreenActivity) {
+            selectedType = Variable.getFullSelectedType();
+        } else {
+            selectedType = Variable.getNormalSelectedType();
+        }
+        if (selectedType == 1 || selectedType == 7 || selectedType == 8 || selectedType == 2) {
+            sdf = new SimpleDateFormat("MM-dd");
+        } else if (selectedType == 5 || selectedType == 6) {
+            sdf = new SimpleDateFormat("hh:mm");
+        }else{
+            sdf = new SimpleDateFormat("yyyy");
+        }
+        return sdf.format(date);
+    }
+
+    public String getDate2(){
+        long temp = date * 1000;
+        Date date = new Date(temp);
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
+        return sdf.format(date);
     }
 
     public void setDate(long date) {
@@ -323,5 +352,45 @@ public class KLineItem {
 
     public void setMacdStatus(int macdStatus) {
         MacdStatus = macdStatus;
+    }
+
+    public double getOpenPrice() {
+        return openPrice;
+    }
+
+    public void setOpenPrice(double openPrice) {
+        this.openPrice = openPrice;
+    }
+
+    public double getHighPrice() {
+        return highPrice;
+    }
+
+    public void setHighPrice(double highPrice) {
+        this.highPrice = highPrice;
+    }
+
+    public double getLowPrice() {
+        return lowPrice;
+    }
+
+    public String getOpenPriceString(){
+        return new DecimalFormat("#0.0000").format(openPrice);
+    }
+
+    public String getClosePriceString(){
+        return new DecimalFormat("#0.0000").format(price);
+    }
+
+    public String getHighPriceString(){
+        return new DecimalFormat("#0.0000").format(highPrice);
+    }
+
+    public String getLowPriceString(){
+        return new DecimalFormat("#0.0000").format(lowPrice);
+    }
+
+    public void setLowPrice(double lowPrice) {
+        this.lowPrice = lowPrice;
     }
 }

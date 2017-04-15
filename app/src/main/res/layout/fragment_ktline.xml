@@ -4,32 +4,52 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- 容纳标题栏的滚动条 -->
-    <HorizontalScrollView
-        android:id="@+id/hsv_pager_select"
+    <RelativeLayout
+
+        android:id="@+id/rl_cover"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:background="#eee"
-        android:scrollbars="none">
+        android:layout_height="40dp">
+        <!-- 容纳标题栏的滚动条 -->
+        <HorizontalScrollView
+            android:id="@+id/hsv_pager_select"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:background="#f4f4f4"
+            android:scrollbars="none">
 
-        <!-- 标题栏，具体布局代码在ll_title中 -->
-        <include layout="@layout/ll_title" />
+            <!-- 标题栏，具体布局代码在ll_title中 -->
+            <include layout="@layout/ll_title" />
 
-    </HorizontalScrollView>
+        </HorizontalScrollView>
+
+        <mobileapp.myjf.com.myxchart.render.CoverView
+            android:id="@+id/view_cover"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0"
+            android:background="#f4f4f4" />
+
+    </RelativeLayout>
 
     <!-- 用于容纳KT线图控件的相对布局 -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#888888" />
+
         <!-- 用于容纳分时图的相对布局 -->
         <RelativeLayout
-            android:clickable="true"
             android:id="@+id/layout_timeline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clickable="true"
             android:padding="10dp"
             android:visibility="visible">
+
             <mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView
                 android:id="@+id/highlight_time"
                 android:layout_width="match_parent"
@@ -50,6 +70,18 @@
 
         <!-- 用于容纳K线图的线性布局 -->
         <include layout="@layout/ll_kline" />
+
+        <Button
+            android:alpha="70"
+            android:id="@+id/bt_full_screen"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/ic_fullscreen"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="38dp"
+            />
 
     </RelativeLayout>
 

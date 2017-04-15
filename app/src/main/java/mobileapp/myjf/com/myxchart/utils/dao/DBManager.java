@@ -165,7 +165,7 @@ public class DBManager {
     public void updateTimeLineRemote(TimeLineRemote timeLineRemote) {
         DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
         TimeLineRemoteDao timeLineRemoteDao = daoMaster.newSession().getTimeLineRemoteDao();
-        TimeLineRemote dbTimeLineRemote = timeLineRemoteDao.queryBuilder().where(TimeLineRemoteDao.Properties.OpenTime.eq(timeLineRemote.getOpenTime())).build().unique();
+        TimeLineRemote dbTimeLineRemote = timeLineRemoteDao.queryBuilder().where(TimeLineRemoteDao.Properties.OpenTime.eq(timeLineRemote.getOpenTime())).build().list().get(0);
         if(dbTimeLineRemote != null){
             dbTimeLineRemote.setClose(timeLineRemote.getClose());
             dbTimeLineRemote.setOpenTime(timeLineRemote.getOpenTime());
@@ -183,7 +183,7 @@ public class DBManager {
     public void updateKLineData(KLineData kLineData) {
         DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
         KLineDataDao kLineDataDao = daoMaster.newSession().getKLineDataDao();
-        KLineData dbKLineData = kLineDataDao.queryBuilder().where(KLineDataDao.Properties.Time.eq(kLineData.getTime()),KLineDataDao.Properties.Type.eq(kLineData.getType())).build().unique();
+        KLineData dbKLineData = kLineDataDao.queryBuilder().where(KLineDataDao.Properties.Time.eq(kLineData.getTime()),KLineDataDao.Properties.Type.eq(kLineData.getType())).build().list().get(0);
         if(dbKLineData != null){
             dbKLineData.setClose(kLineData.getClose());
             dbKLineData.setOpen(kLineData.getOpen());

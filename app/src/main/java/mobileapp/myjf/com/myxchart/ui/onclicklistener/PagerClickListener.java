@@ -57,45 +57,59 @@ public class PagerClickListener implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_fenshi:
-                // 界面选择器滚动布局移到相应位置使被选择项居中
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 0), 0);
-                // 处理其他逻辑
-                setTab(0);
-                break;
-            case R.id.tv_rik:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 0), 0);
-                setTab(1);
-                break;
-            case R.id.tv_60fen:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 0), 0);
-                setTab(2);
-                break;
-            case R.id.tv_zhouk:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 30), 0);
-                setTab(3);
-                break;
-            case R.id.tv_yuek:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 90), 0);
-                setTab(4);
-                break;
-            case R.id.tv_1fen:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 150), 0);
-                setTab(5);
-                break;
-            case R.id.tv_5fen:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 210), 0);
-                setTab(6);
-                break;
-            case R.id.tv_30fen:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 210), 0);
-                setTab(7);
-                break;
-            case R.id.tv_240fen:
-                pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 210), 0);
-                setTab(8);
-                break;
+        if(R.id.tv_fenshi == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 0), 0);
+            // 处理其他逻辑
+            setTab(0);
+        }
+        if(R.id.tv_rik == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 0), 0);
+            // 处理其他逻辑
+            setTab(1);
+        }
+        if(R.id.tv_60fen == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 0), 0);
+            // 处理其他逻辑
+            setTab(2);
+        }
+        if(R.id.tv_zhouk == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 30), 0);
+            // 处理其他逻辑
+            setTab(3);
+        }
+        if(R.id.tv_yuek == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 90), 0);
+            // 处理其他逻辑
+            setTab(4);
+        }
+        if(R.id.tv_1fen == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 150), 0);
+            // 处理其他逻辑
+            setTab(5);
+        }
+        if(R.id.tv_5fen == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 210), 0);
+            // 处理其他逻辑
+            setTab(6);
+        }
+        if(R.id.tv_30fen == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 210), 0);
+            // 处理其他逻辑
+            setTab(7);
+        }
+        if(R.id.tv_240fen == v.getId()){
+            // 界面选择器滚动布局移到相应位置使被选择项居中
+            pagerSelecter.smoothScrollTo(PXUtils.dip2px(activity, 210), 0);
+            // 处理其他逻辑
+            setTab(8);
         }
     }
 
@@ -108,7 +122,7 @@ public class PagerClickListener implements View.OnClickListener {
         // 重置界面状态（图表类型栏、副图类型栏、内容）
         clearStatus();
         // 改变被选择项的字体颜色
-        titles.get(index).setTextColor(Color.RED);
+        titles.get(index).setTextColor(Color.parseColor("#ff4848"));
         // 显示被选择项的指示器
         titleIndectors.get(index).setVisibility(View.VISIBLE);
         // 若被选择项为分时线则隐藏K线布局，显示分时线布局，否则做相反处理
@@ -142,7 +156,7 @@ public class PagerClickListener implements View.OnClickListener {
     private void clearStatus() {
         // 遍历标题栏设置字体颜色
         for (TextView tv : titles) {
-            tv.setTextColor(Color.BLACK);
+            tv.setTextColor(Color.parseColor("#676767"));
         }
         // 遍历标题栏隐藏所有指示器
         for (View v : titleIndectors) {
@@ -160,9 +174,9 @@ public class PagerClickListener implements View.OnClickListener {
         // 遍历副图类型选择控件
         for (RelativeLayout rl : types) {
             // 字体颜色初始化
-            ((TextView) rl.getChildAt(0)).setTextColor(Color.BLACK);
+            ((TextView) rl.getChildAt(0)).setTextColor(Color.parseColor("#8a8a8a"));
             // 文字背景初始化
-            rl.setBackgroundColor(Color.WHITE);
+            rl.setBackgroundColor(Color.parseColor("#00000000"));
             // 设置被选择的副图类型为MACD
             Variable.setSecondaryType(0);
         }

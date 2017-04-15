@@ -11,6 +11,7 @@ import android.view.View;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
+import mobileapp.myjf.com.myxchart.render.draw.KLineDrawer;
 import mobileapp.myjf.com.myxchart.utils.global.Variable;
 import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
 import mobileapp.myjf.com.myxchart.entity.util.KLineItem;
@@ -27,8 +28,6 @@ public class KLineHighLightView extends View {
     Context context;
     // 长按事件的横坐标数值
     float moveX;
-    // 副图类型
-    int secondaryType;
 
     // 构造方法
     public KLineHighLightView(Context context) {
@@ -48,12 +47,6 @@ public class KLineHighLightView extends View {
 
     public void setMoveX(float moveX) {
         this.moveX = moveX;
-    }
-
-    public void setSecondaryType(){
-
-        secondaryType = Variable.getSecondaryType();
-
     }
 
     /**
@@ -80,69 +73,8 @@ public class KLineHighLightView extends View {
 
             float height = getHeight() * 0.95f;
 
-            // 声明画笔
-            Paint paint = new Paint();
-            // 设置抗锯齿为true
-            paint.setAntiAlias(true);
-            // 设置线宽为3
-            paint.setStrokeWidth(3);
-            // 设置线的颜色为黑色
-            paint.setColor(Color.BLACK);
-            // 根据moveX画出竖线
-            int itemNumber = Variable.getItemNumber();
-            // 若数据量小于一屏时，设置开始索引
-            int startX = 0;
-
-            float unitX;
-            if (kLineItems.size() >= itemNumber) {
-                unitX = ((float) getWidth()) / kLineItems.size();
-            } else {
-                unitX = ((float) getWidth()) / itemNumber;
-                startX = itemNumber - kLineItems.size();
-            }
-            int position = (int) (moveX / unitX) - startX;
-            if (position < 0) {
-                position = 0;
-            }
-            if (position > kLineItems.size() - 1) {
-                position = kLineItems.size() - 1;
-            }
-            float lineX = (position + startX) * unitX + unitX / 2;
-
-            position = kLineItems.size() - (int) (moveX / unitX) - 1 + startX;
-
-            if (position < 0) {
-                position = 0;
-            }
-            if (position > kLineItems.size() - 1) {
-                position = kLineItems.size() - 1;
-            }
-
-            int priceTemp = (int) (kLineItems.get(position).getPrice() * 100);
-            float price = (float) priceTemp / 100;
-
-            String timeString = kLineItems.get(position).getDate();
-            double lineY = kLineItems.get(position).getCloseY();
-            canvas.drawLine(lineX, 0, lineX, height, paint);
-            canvas.drawLine(0, (float) lineY, getWidth(), (float) lineY, paint);
-            paint.setTextSize(PXUtils.dip2px(context, 12));
-            canvas.drawText("" + price, 0, (float) lineY, paint);
-            canvas.drawText(timeString, lineX, height, paint);
-
-            switch (secondaryType){
-                case 0:
-                    canvas.drawText("Macd_dea = " + kLineItems.get(position).getMacd_deaPoint().getPrice(),10,50,paint);
-                    break;
-                case 1:
-                    canvas.drawText("Rsi1 = " + kLineItems.get(position).getRsi1Point().getPrice(),10,50,paint);
-                    break;
-                case 2:
-                    canvas.drawText("Bias1 = " + kLineItems.get(position).getBias1Point().getPrice(),10,50,paint);
-                    break;
-                case 3:
-                    canvas.drawText("Kdj_k = " + kLineItems.get(position).getKdj_kPoint().getPrice(),10,50,paint);
-                    break;
-            }
+            KLineDrawer.renderHighLight(canvas, height, getWidth(), context, kLineItems, moveX);
+            KLineDrawer.renderBigRect(canvas,height,getWidth(),context,kLineItems,moveX);
 
         }
         super.onDraw(canvas);

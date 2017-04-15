@@ -123,5 +123,9 @@ public class GlobalViewsUtil {
     public static SecondaryHighLight getSecondaryHighLight(Activity activity){
         return (SecondaryHighLight)activity.findViewById(R.id.highlight_secondary);
     }
+    // 获取标题栏遮罩层
+    public static View getCover(Activity activity){
+        return activity.findViewById(R.id.view_cover);
+    }
 
 }

@@ -7,6 +7,7 @@ import java.util.List;
 
 import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
 import mobileapp.myjf.com.myxchart.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
 import mobileapp.myjf.com.myxchart.utils.global.Variable;
 import mobileapp.myjf.com.myxchart.utils.calculation.LocalToView;
 import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
@@ -18,6 +19,14 @@ import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
 public class DrawSecondary {
 
     public static void drawSecondary(final Activity activity, final List<KLineData> kLineDatas, final int type) {
+
+        final int selectedType;
+        if (activity instanceof FullScreenActivity) {
+            selectedType = Variable.getFullSelectedType();
+        } else {
+            selectedType = Variable.getNormalSelectedType();
+        }
+
         // 只有在有数据时才去更新界面
         if (kLineDatas != null && kLineDatas.size() > 3) {
             // 若该方法正在子线程运行则不再另建子线程
@@ -31,7 +40,7 @@ public class DrawSecondary {
                     @Override
                     public void run() {
                         // 只有当计算结束后用户仍在此页面时才会更新K线视图
-                        if (type == Variable.getSelectedType()) {
+                        if (type == selectedType) {
                             // 根据所传参数刷新副图数据
                             RefreshHelper.refreshSecondaryView(activity, kLineRender, secondaryType);
                         }
@@ -52,7 +61,7 @@ public class DrawSecondary {
                         @Override
                         public void run() {
                             // 只有当计算结束后用户仍在此页面时才会更新K线视图
-                            if (type == Variable.getSelectedType()) {
+                            if (type == selectedType) {
                                 // 根据所传参数刷新副图数据
                                 RefreshHelper.refreshSecondaryView(activity, kLineRender, secondaryType);
                             }

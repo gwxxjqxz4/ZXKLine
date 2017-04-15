@@ -10,6 +10,7 @@ import java.util.List;
 
 import mobileapp.myjf.com.myxchart.R;
 import mobileapp.myjf.com.myxchart.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
 import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.utils.global.Variable;
 import mobileapp.myjf.com.myxchart.utils.draw.DrawSecondary;
@@ -31,34 +32,38 @@ public class SecondaryClickListener implements View.OnClickListener {
         this.activity = activity;
         titles = GlobalViewsUtil.getTypes(activity);
 
-        kLineType = Variable.getSelectedType();
+        final int selectedType;
+        if (activity instanceof FullScreenActivity) {
+            selectedType = Variable.getFullSelectedType();
+        } else {
+            selectedType = Variable.getNormalSelectedType();
+        }
+        kLineType = selectedType;
 
         ((TextView) titles.get(0).getChildAt(0)).setTextColor(Color.WHITE);
-        titles.get(0).setBackgroundColor(Color.RED);
+        titles.get(0).setBackgroundColor(Color.parseColor("#f64e54"));
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.rl_macd:
-                setTab(0);
-                break;
-            case R.id.rl_rsi:
-                setTab(1);
-                break;
-            case R.id.rl_bias:
-                setTab(2);
-                break;
-            case R.id.rl_kdj:
-                setTab(3);
-                break;
+        if (R.id.rl_macd == v.getId()) {
+            setTab(0);
+        }
+        if (R.id.rl_rsi == v.getId()) {
+            setTab(1);
+        }
+        if (R.id.rl_bias == v.getId()) {
+            setTab(2);
+        }
+        if (R.id.rl_kdj == v.getId()) {
+            setTab(3);
         }
     }
 
     private void clearStatus() {
         for (RelativeLayout rl : titles) {
-            ((TextView) rl.getChildAt(0)).setTextColor(Color.BLACK);
-            rl.setBackgroundColor(Color.WHITE);
+            ((TextView) rl.getChildAt(0)).setTextColor(Color.parseColor("#8a8a8a"));
+            rl.setBackgroundColor(Color.argb(0, 0, 0, 0));
         }
     }
 
@@ -86,16 +91,16 @@ public class SecondaryClickListener implements View.OnClickListener {
 
         Variable.setSecondaryType(secondaryType);
 
-        String[] types = new String[]{"","Day","60","Week","Month","1","5","30","240"};
+        String[] types = new String[]{"", "Day", "60", "Week", "Month", "1", "5", "30", "240"};
 
         clearStatus();
 
-        List<KLineData> kLineDatas = KLineManager.queryKLineDatas(activity,types[Variable.getSelectedType()]);
-        DrawSecondary.drawSecondary(activity,kLineDatas,Variable.getSelectedType());
+        List<KLineData> kLineDatas = KLineManager.queryKLineDatas(activity, types[kLineType]);
+        DrawSecondary.drawSecondary(activity, kLineDatas, kLineType);
 
 
         ((TextView) titles.get(secondaryType).getChildAt(0)).setTextColor(Color.WHITE);
-        titles.get(secondaryType).setBackgroundColor(Color.RED);
+        titles.get(secondaryType).setBackgroundColor(Color.parseColor("#f64e54"));
 
     }
 

@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.entity.util.KLineData;
+import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
 import mobileapp.myjf.com.myxchart.ui.onclicklistener.SecondaryClickListener;
 import mobileapp.myjf.com.myxchart.utils.calculation.LocalToView;
 import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
@@ -23,6 +24,14 @@ import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
 public class DrawKLine {
 
     public static void drawKLine(final Activity activity, final List<KLineData> kLineDatas, final int type) {
+
+        final int selectedType;
+        if (activity instanceof FullScreenActivity) {
+            selectedType = Variable.getFullSelectedType();
+        } else {
+            selectedType = Variable.getNormalSelectedType();
+        }
+
         // 只有在有数据时才去更新界面
         if (kLineDatas != null && kLineDatas.size() > 3) {
             // 若该方法正在子线程运行则不再另建子线程
@@ -36,7 +45,7 @@ public class DrawKLine {
                     @Override
                     public void run() {
                         // 只有当计算结束后用户仍在此页面时才会更新K线视图
-                        if (type == Variable.getSelectedType()) {
+                        if (type == selectedType) {
                             // 根据渲染数据对象渲染K线数据
                             RefreshHelper.refreshMainView(activity, kLineRender);
                             // 设置触摸事件监听，完成十字线显示、拖动、双击全屏等事件
@@ -60,7 +69,7 @@ public class DrawKLine {
                             @Override
                             public void run() {
                                 // 只有当计算结束后用户仍在此页面时才会更新K线视图
-                                if (type == Variable.getSelectedType()) {
+                                if (type == selectedType) {
                                     // 根据渲染数据对象渲染K线数据
                                     RefreshHelper.refreshMainView(activity, kLineRender);
                                     // 设置触摸事件监听，完成十字线显示、拖动、双击全屏等事件

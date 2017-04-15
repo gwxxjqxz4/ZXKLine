@@ -1,5 +1,7 @@
 package mobileapp.myjf.com.myxchart.entity.util;
 
+import java.text.DecimalFormat;
+
 /**
  * Created by nethanhan on 2017/4/6.
  */
@@ -28,6 +30,10 @@ public class KLinePoint {
 
     public double getPrice() {
         return price;
+    }
+
+    public String getPriceString(){
+        return new DecimalFormat("#0.0000").format(price);
     }
 
     public void setPrice(double price) {

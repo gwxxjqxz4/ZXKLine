@@ -10,12 +10,13 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.FullScreenActivity"
-            android:screenOrientation="landscape"/>
-        <activity android:name=".ui.KTLineActivity"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.MainActivity">
+        <activity
+            android:name=".ui.FullScreenActivity"
+            android:screenOrientation="landscape" />
+        <activity
+            android:name="mobileapp.myjf.com.myxchart.GoodsDetailActivity"
+            android:screenOrientation="portrait" />
+        <activity android:name="mobileapp.myjf.com.myxchart.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

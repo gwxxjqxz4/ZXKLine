@@ -21,16 +21,16 @@ public class DaoMaster extends AbstractDaoMaster {
 
     /** Creates underlying database table using DAOs. */
     public static void createAllTables(Database db, boolean ifNotExists) {
+        AddKLineRemoteDao.createTable(db, ifNotExists);
         TimeLineRemoteDao.createTable(db, ifNotExists);
         KLineDataDao.createTable(db, ifNotExists);
-        AddKLineRemoteDao.createTable(db, ifNotExists);
     }
 
     /** Drops underlying database table using DAOs. */
     public static void dropAllTables(Database db, boolean ifExists) {
+        AddKLineRemoteDao.dropTable(db, ifExists);
         TimeLineRemoteDao.dropTable(db, ifExists);
         KLineDataDao.dropTable(db, ifExists);
-        AddKLineRemoteDao.dropTable(db, ifExists);
     }
 
     /**
@@ -49,9 +49,9 @@ public class DaoMaster extends AbstractDaoMaster {
 
     public DaoMaster(Database db) {
         super(db, SCHEMA_VERSION);
+        registerDaoClass(AddKLineRemoteDao.class);
         registerDaoClass(TimeLineRemoteDao.class);
         registerDaoClass(KLineDataDao.class);
-        registerDaoClass(AddKLineRemoteDao.class);
     }
 
     public DaoSession newSession() {

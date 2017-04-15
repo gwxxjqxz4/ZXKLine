@@ -76,9 +76,9 @@ public class SecondaryHighLight extends View {
             // 设置抗锯齿为true
             paint.setAntiAlias(true);
             // 设置线宽为3
-            paint.setStrokeWidth(3);
+            paint.setStrokeWidth(1);
             // 设置线的颜色为黑色
-            paint.setColor(Color.BLACK);
+            paint.setColor(Color.parseColor("#888888"));
             // 根据moveX画出竖线
             int itemNumber = Variable.getItemNumber();
             // 若数据量小于一屏时，设置开始索引

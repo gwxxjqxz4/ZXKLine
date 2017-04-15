@@ -5,14 +5,16 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.Date;
+import java.util.List;
 
 import mobileapp.myjf.com.myxchart.entity.render.TimeLineRender;
 import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
+import mobileapp.myjf.com.myxchart.ui.onclicklistener.PagerClickListener;
 import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
 import mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView;
-import mobileapp.myjf.com.myxchart.ui.MainActivity;
 import mobileapp.myjf.com.myxchart.utils.global.Variable;
 import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
 
@@ -35,6 +37,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
     private boolean isFirstClick = true;
     // 第一次点击的时间
     private long firstClickTime;
+    List<TextView> titles;
 
     private Activity activity;
     private TimeLineHighLightView timeLineHighLightView;
@@ -43,6 +46,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
     public TimeLineOnTouchListener(Activity activity, TimeLineRender timeLineRender) {
         this.activity = activity;
         this.timeLineRender = timeLineRender;
+        titles = GlobalViewsUtil.getTitles(activity);
 
         timeLineHighLightView = GlobalViewsUtil.getTimeLineHighLight(activity);
 
@@ -50,7 +54,6 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View v, final MotionEvent event) {
-        Log.e("TimeLineHighLight", "分时线触摸事件正确获取");
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 if (timeLineHighLightView == null) {
@@ -65,6 +68,7 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                         if (!(activity instanceof FullScreenActivity)) {
                             Intent intent = new Intent(activity, FullScreenActivity.class);
                             activity.startActivity(intent);
+                            activity.finish();
                         }
                     } else {
                         isFirstClick = false;
@@ -90,7 +94,6 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                                 // 设置长按状态为true
                                 isLongClick = true;
                                 isJudge = false;
-                                Log.e("TimeLineHighLight", "分时线长按事件正确触发");
                             }
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -107,6 +110,15 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
                 if (isLongClick == true) {
 
                     RefreshHelper.refreshTimeLineHighLight(activity, timeLineRender, event.getX());
+                    GlobalViewsUtil.getCover(activity).setAlpha(1);
+                    RefreshHelper.refreshCoverView(activity, timeLineRender, null, event.getX());
+                    for (TextView textView : titles) {
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                            }
+                        });
+                    }
 
                 }
 
@@ -115,6 +127,11 @@ public class TimeLineOnTouchListener implements View.OnTouchListener {
             case MotionEvent.ACTION_UP:
                 // 传入空数据刷新，隐藏分时线高亮
                 RefreshHelper.refreshTimeLineHighLight(activity, null, 0);
+                RefreshHelper.refreshCoverView(activity, null, null, 0);
+                GlobalViewsUtil.getCover(activity).setAlpha(0);
+                for (TextView textView : titles) {
+                    textView.setOnClickListener(new PagerClickListener(activity));
+                }
                 isLongClick = false;
                 isNoMove = true;
                 isJudge = false;

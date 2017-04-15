@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
+import mobileapp.myjf.com.myxchart.render.draw.SecondaryDrawer;
+
 public class SecondaryBackgroundView extends View {
 
     Context context;
@@ -31,26 +33,9 @@ public class SecondaryBackgroundView extends View {
     protected void onDraw(Canvas canvas) {
         // 副图线图所占高度
         float height = getHeight();
-        // 声明画笔
-        Paint paint = new Paint();
-        // 设置抗锯齿为true
-        paint.setAntiAlias(true);
-        // 设置线宽为3
-        paint.setStrokeWidth(4);
-        // 设置线的颜色为黑色
-        paint.setColor(Color.BLACK);
-        // 画出4条边框
-        canvas.drawLine(0, 0, 0, height, paint);
-        canvas.drawLine(0, 0, getWidth(), 0, paint);
-        canvas.drawLine(0, height, getWidth(), height, paint);
-        canvas.drawLine(getWidth(), 0, getWidth(), height, paint);
-        paint.setStrokeWidth(1);
-        // 画出纵向坐标线
-        canvas.drawLine(getWidth() / 4, 0, getWidth() / 4, height, paint);
-        canvas.drawLine(getWidth() / 4 * 2, 0, getWidth() / 4 * 2, height, paint);
-        canvas.drawLine(getWidth() / 4 * 3, 0, getWidth() / 4 * 3, height, paint);
-        // 画出横向坐标线
-        canvas.drawLine(0, height / 2, getWidth(), height / 2, paint);
+
+        SecondaryDrawer.renderBackground(canvas,height,getWidth());
+
         super.onDraw(canvas);
     }
 }

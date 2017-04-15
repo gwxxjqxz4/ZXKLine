@@ -1,9 +1,7 @@
-package mobileapp.myjf.com.myxchart.ui;
+package com.example.myxdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
-
-import mobileapp.myjf.com.myxchart.R;
 
 /**
  * create by gwx
@@ -16,8 +14,6 @@ public class KTLineActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line);
-
-        
 
     }
 

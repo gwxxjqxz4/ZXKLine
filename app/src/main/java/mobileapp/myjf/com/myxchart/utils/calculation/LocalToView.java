@@ -39,8 +39,8 @@ public class LocalToView {
         // 获取分时线的容器布局
         RelativeLayout timeLineLayout = GlobalViewsUtil.getTimeLineLayout(activity);
         // 获取容器的宽高
-        double viewWidth = timeLineLayout.getWidth() - PXUtils.dip2px(activity,20);
-        double viewHeight = timeLineLayout.getHeight() - PXUtils.dip2px(activity,20);
+        double viewWidth = timeLineLayout.getWidth() - PXUtils.dip2px(activity, 20);
+        double viewHeight = timeLineLayout.getHeight() - PXUtils.dip2px(activity, 20);
         // 给底部时间留下空间
         viewHeight = viewHeight * 19 / 20;
 
@@ -199,7 +199,7 @@ public class LocalToView {
         kLineRender.setMacdTop(secondaryLimit[0]);
         kLineRender.setMacdBottom(secondaryLimit[1]);
         kLineRender.setRsiTop(secondaryLimit[2]);
-        kLineRender.setMacdBottom(secondaryLimit[3]);
+        kLineRender.setRsiBottom(secondaryLimit[3]);
         kLineRender.setBiasTop(secondaryLimit[4]);
         kLineRender.setBiasBottom(secondaryLimit[5]);
         kLineRender.setKdjTop(secondaryLimit[6]);
@@ -255,6 +255,9 @@ public class LocalToView {
             item.setMa30Point(new KLinePoint(xValue, ma30Y, viewDatas.get(i).getMa30()));
             item.setDate(viewDatas.get(i).getTime());
             item.setPrice(viewDatas.get(i).getClose());
+            item.setOpenPrice(viewDatas.get(i).getOpen());
+            item.setHighPrice(viewDatas.get(i).getHigh());
+            item.setLowPrice(viewDatas.get(i).getLow());
             // 将设置好的坐标对象添加进集合中
             items.add(item);
         }
@@ -562,6 +565,7 @@ public class LocalToView {
             // 将计算到的参数设置给坐标对象
             kLinePoint.setMacdTop(top);
             kLinePoint.setMacdBottom(bottom);
+            kLinePoint.setMacdPrice(viewDatas.get(i).getMacd());
             kLinePoint.setMacd_difPoint(new KLinePoint(coordinateX, macd_difY, viewDatas.get(i).getMacd_dif()));
             kLinePoint.setMacd_deaPoint(new KLinePoint(coordinateX, macd_deaY, viewDatas.get(i).getMacd_dea()));
 
@@ -589,9 +593,9 @@ public class LocalToView {
             double rsi2Y = (maxValue - viewDatas.get(i).getRsi2()) * unitY + startSecondarY;
             double rsi3Y = (maxValue - viewDatas.get(i).getRsi3()) * unitY + startSecondarY;
             // 记录MACD的正负状态
-            kLinePoint.setRsi1Point(new KLinePoint(coordinateX, rsi1Y, viewDatas.get(i).getMacd_dif()));
-            kLinePoint.setRsi2Point(new KLinePoint(coordinateX, rsi2Y, viewDatas.get(i).getMacd_dea()));
-            kLinePoint.setRsi3Point(new KLinePoint(coordinateX, rsi3Y, viewDatas.get(i).getMacd_dea()));
+            kLinePoint.setRsi1Point(new KLinePoint(coordinateX, rsi1Y, viewDatas.get(i).getRsi1()));
+            kLinePoint.setRsi2Point(new KLinePoint(coordinateX, rsi2Y, viewDatas.get(i).getRsi2()));
+            kLinePoint.setRsi3Point(new KLinePoint(coordinateX, rsi3Y, viewDatas.get(i).getRsi3()));
 
         }
 
@@ -620,9 +624,9 @@ public class LocalToView {
             double bias2Y = (maxValue - viewDatas.get(i).getBias2()) * unitY + startSecondarY;
             double bias3Y = (maxValue - viewDatas.get(i).getBias3()) * unitY + startSecondarY;
             // 记录MACD的正负状态
-            kLinePoint.setBias1Point(new KLinePoint(coordinateX, bias1Y, viewDatas.get(i).getMacd_dif()));
-            kLinePoint.setBias2Point(new KLinePoint(coordinateX, bias2Y, viewDatas.get(i).getMacd_dea()));
-            kLinePoint.setBias3Point(new KLinePoint(coordinateX, bias3Y, viewDatas.get(i).getMacd_dea()));
+            kLinePoint.setBias1Point(new KLinePoint(coordinateX, bias1Y, viewDatas.get(i).getBias1()));
+            kLinePoint.setBias2Point(new KLinePoint(coordinateX, bias2Y, viewDatas.get(i).getBias2()));
+            kLinePoint.setBias3Point(new KLinePoint(coordinateX, bias3Y, viewDatas.get(i).getBias3()));
 
         }
 
@@ -651,9 +655,9 @@ public class LocalToView {
             double kdjJY = (maxValue - viewDatas.get(i).getKdj_j()) * unitY + startSecondarY;
             double kdjKY = (maxValue - viewDatas.get(i).getKdj_k()) * unitY + startSecondarY;
             // 记录MACD的正负状态
-            kLinePoint.setKdj_dPoint(new KLinePoint(coordinateX, kdjDY, viewDatas.get(i).getMacd_dif()));
-            kLinePoint.setKdj_jPoint(new KLinePoint(coordinateX, kdjJY, viewDatas.get(i).getMacd_dea()));
-            kLinePoint.setKdj_kPoint(new KLinePoint(coordinateX, kdjKY, viewDatas.get(i).getMacd_dea()));
+            kLinePoint.setKdj_dPoint(new KLinePoint(coordinateX, kdjDY, viewDatas.get(i).getKdj_d()));
+            kLinePoint.setKdj_jPoint(new KLinePoint(coordinateX, kdjJY, viewDatas.get(i).getKdj_j()));
+            kLinePoint.setKdj_kPoint(new KLinePoint(coordinateX, kdjKY, viewDatas.get(i).getKdj_k()));
 
         }
 

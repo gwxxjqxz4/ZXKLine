@@ -14,6 +14,7 @@
         <TextView
             android:id="@+id/tv_fenshi"
             android:layout_width="60dp"
+            android:textColor="#ff4848"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="分时"
@@ -23,9 +24,9 @@
         <View
             android:id="@+id/view_fenshi"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="visible" />
 
     </RelativeLayout>
@@ -37,6 +38,7 @@
         <TextView
             android:id="@+id/tv_rik"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="日K"
@@ -45,9 +47,9 @@
         <View
             android:id="@+id/view_rik"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -59,6 +61,7 @@
         <TextView
             android:id="@+id/tv_60fen"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="60分"
@@ -67,9 +70,9 @@
         <View
             android:id="@+id/view_60fen"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -81,6 +84,7 @@
         <TextView
             android:id="@+id/tv_zhouk"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="周K"
@@ -89,9 +93,9 @@
         <View
             android:id="@+id/view_zhouk"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -103,6 +107,7 @@
         <TextView
             android:id="@+id/tv_yuek"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="月K"
@@ -111,9 +116,9 @@
         <View
             android:id="@+id/view_yuek"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -125,6 +130,7 @@
         <TextView
             android:id="@+id/tv_1fen"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="1分"
@@ -133,9 +139,9 @@
         <View
             android:id="@+id/view_1fen"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -147,6 +153,7 @@
         <TextView
             android:id="@+id/tv_5fen"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="5分"
@@ -155,9 +162,9 @@
         <View
             android:id="@+id/view_5fen"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -169,6 +176,7 @@
         <TextView
             android:id="@+id/tv_30fen"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="30分"
@@ -177,9 +185,9 @@
         <View
             android:id="@+id/view_30fen"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>
@@ -191,6 +199,7 @@
         <TextView
             android:id="@+id/tv_240fen"
             android:layout_width="60dp"
+            android:textColor="#676767"
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="240分"
@@ -199,9 +208,9 @@
         <View
             android:id="@+id/view_240fen"
             android:layout_width="60dp"
-            android:layout_height="3dp"
+            android:layout_height="1.5dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"
+            android:background="#ff4848"
             android:visibility="gone" />
 
     </RelativeLayout>

@@ -6,12 +6,14 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.Date;
 import java.util.List;
 
 import mobileapp.myjf.com.myxchart.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
+import mobileapp.myjf.com.myxchart.ui.onclicklistener.PagerClickListener;
 import mobileapp.myjf.com.myxchart.utils.calculation.LocalToView;
 import mobileapp.myjf.com.myxchart.entity.render.KLineRender;
 import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
@@ -19,7 +21,6 @@ import mobileapp.myjf.com.myxchart.utils.global.Variable;
 import mobileapp.myjf.com.myxchart.render.data.KLineView;
 import mobileapp.myjf.com.myxchart.render.highlight.KLineHighLightView;
 import mobileapp.myjf.com.myxchart.render.highlight.SecondaryHighLight;
-import mobileapp.myjf.com.myxchart.ui.MainActivity;
 import mobileapp.myjf.com.myxchart.utils.other.RefreshHelper;
 
 /**
@@ -45,7 +46,7 @@ public class KLineOnTouchListener implements View.OnTouchListener {
     private float scrollX;
     // 滑动事件的索引
     private int scrollPosition = 0;
-
+    List<TextView> titles;
     // 每屏数据量
     private int itemNumber;
 
@@ -69,6 +70,7 @@ public class KLineOnTouchListener implements View.OnTouchListener {
         secondaryHighLight = GlobalViewsUtil.getSecondaryHighLight(activity);
         kLineView = GlobalViewsUtil.getKLineView(activity);
         secondaryView = GlobalViewsUtil.getSecondaryView(activity);
+        titles = GlobalViewsUtil.getTitles(activity);
 
         itemNumber = Variable.getItemNumber();
 
@@ -91,6 +93,7 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                         if (!(activity instanceof FullScreenActivity)) {
                             Intent intent = new Intent(activity, FullScreenActivity.class);
                             activity.startActivity(intent);
+                            activity.finish();
                         }
                     } else {
                         isFirstClick = false;
@@ -136,6 +139,16 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                     RefreshHelper.refreshMainHighLight(activity, kLineRender, event.getX());
 
                     RefreshHelper.refreshSecondaryHighLight(activity, kLineRender, event.getX());
+                    GlobalViewsUtil.getCover(activity).setAlpha(1);
+                    RefreshHelper.refreshCoverView(activity, null, kLineRender, event.getX());
+                    for(TextView textView:titles){
+                        textView.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+
+                            }
+                        });
+                    }
 
                 } else {
 
@@ -173,6 +186,11 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                 // 传入空参，使控件清除高亮线
                 RefreshHelper.refreshMainHighLight(activity, null, event.getX());
                 RefreshHelper.refreshSecondaryHighLight(activity, null, event.getX());
+                RefreshHelper.refreshCoverView(activity, null, null, 0);
+                GlobalViewsUtil.getCover(activity).setAlpha(0);
+                for(TextView textView:titles){
+                    textView.setOnClickListener(new PagerClickListener(activity));
+                }
                 // 初始化各项参数，准备下一次触摸事件
                 isLongClick = false;
                 isNoMove = true;

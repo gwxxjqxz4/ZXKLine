@@ -1,6 +1,8 @@
 package mobileapp.myjf.com.myxchart.utils.other;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -17,6 +19,7 @@ import mobileapp.myjf.com.myxchart.entity.originaldata.TimeLineRemote;
 import mobileapp.myjf.com.myxchart.entity.util.KLineData;
 import mobileapp.myjf.com.myxchart.net.subscriber.AddKLineSubscriber;
 import mobileapp.myjf.com.myxchart.net.subscriber.AddTimeLineSubscriber;
+import mobileapp.myjf.com.myxchart.ui.FullScreenActivity;
 import mobileapp.myjf.com.myxchart.utils.draw.DrawKLine;
 import mobileapp.myjf.com.myxchart.utils.draw.DrawSecondary;
 import mobileapp.myjf.com.myxchart.net.subscriber.GetKLineSubscriber;
@@ -43,15 +46,21 @@ public class RequestHelper {
      * @param activity 上下文对象
      */
     public static void getTimeLineDatas(Activity activity) {
-
+        if (activity instanceof FullScreenActivity) {
+            Variable.setFullSelectedType(0);
+        } else {
+            Variable.setNormalSelectedType(0);
+        }
         // 从数据库中获取分时线数据的本地缓存
         long date1 = new Date(System.currentTimeMillis()).getTime();
-        Log.e("性能优化","查询数据库的时间：" + date1);
+        Log.e("性能优化", "查询数据库的时间：" + date1);
         List<TimeLineRemote> timeLineRemotes = TimeLineManager.queryTimeLineRemotes(activity);
+        SharedPreferences sp = activity.getPreferences(Context.MODE_PRIVATE);
+        long timeStamp = sp.getLong(Constants.getKLineTypes[0], 0);
         // 若数据库中没有数据或获取到的数据列表长度小于3则向服务器请求全部数据
         if (timeLineRemotes == null || timeLineRemotes.size() < 3) {
             long date2 = new Date(System.currentTimeMillis()).getTime();
-            Log.e("性能优化","发起请求的时间" + date2);
+            Log.e("性能优化", "发起请求的时间" + date2);
             // 构造请求对象
             GetTimeLineOriginal getTimeLineList = new GetTimeLineOriginal();
             // 设置机构代码
@@ -69,7 +78,7 @@ public class RequestHelper {
             }
         } else {
             // 若数据库中数据为昨日数据则清空数据库并向服务器请求全部数据，否则只请求最新数据
-            if (StampJudgement.isYesterdayData(timeLineRemotes.get(timeLineRemotes.size() - 2).getOpenTime())) {
+            if (StampJudgement.isYesterdayData(timeStamp)) {
                 // 清空数据库
                 TimeLineManager.deleteAllDatas(activity);
                 // 构造请求对象
@@ -108,6 +117,7 @@ public class RequestHelper {
                 }
             }
         }
+        sp.edit().putLong(Constants.getKLineTypes[0], new Date(System.currentTimeMillis()).getTime()).commit();
     }
 
     /**
@@ -116,16 +126,19 @@ public class RequestHelper {
      * @param activity 上下文对象
      */
     public static void getKLineDatas(final Activity activity, int type) {
-
+        if (activity instanceof FullScreenActivity) {
+            Variable.setFullSelectedType(type);
+        } else {
+            Variable.setNormalSelectedType(type);
+        }
         // 获取K线图总布局，用于控制K线图点击事件
         LinearLayout kLineLayout = GlobalViewsUtil.getKLineLayout(activity);
-        // 全局变量记录用户选择的图表类型
-        Variable.setSelectedType(type);
         // 用于请求不同类型K线数据的类型字段值，get为请求全部数据,同时也是数据库类型值，add为添加数据
         String[] getTypes = Constants.getKLineTypes;
         String[] addTypes = Constants.addKLineTypes;
         // 从数据库中获取本地缓存的分时线数据类型（用于判断数据库内容是否过期）
-        List<TimeLineRemote> timeLineRemotes = TimeLineManager.queryTimeLineRemotes(activity);
+        SharedPreferences sp = activity.getPreferences(Context.MODE_PRIVATE);
+        long timeStamp = sp.getLong(Constants.getKLineTypes[type], 0);
         // 从数据库中获取本地缓存的对应类型K线数据
         final List<KLineData> kLineDatas = KLineManager.queryKLineDatas(activity, getTypes[type]);
         // 如果数据库中没有该类数据或条目数量为0则直接请求旧接口插入数据
@@ -149,7 +162,7 @@ public class RequestHelper {
             });
         } else {
             // 若数据库中有昨天的数据则清除数据库并请求网络
-            if (timeLineRemotes.size() - 2 > 0 && StampJudgement.isYesterdayData(timeLineRemotes.get(timeLineRemotes.size() - 2).getOpenTime())) {
+            if (StampJudgement.isYesterdayData(timeStamp)) {
                 // 清理数据库中的全部数据
                 KLineManager.deleteAllDatas(activity);
                 // 构造请求对象
@@ -187,7 +200,7 @@ public class RequestHelper {
                 addKLineOriginal.setType(addTypes[type]);
                 // 设置请求时间戳（数据库中本类数据倒数第二条的时间戳）
                 addKLineOriginal.setOpenTime(kLineDatas.get(kLineDatas.size() - 3).getTime());
-                Log.e("参数","Token = " + Variable.getToken() + ",OrganizationCode = " + Variable.getOrganizationCode() + ",ProductCode = " + Variable.getProductCode() + ",KType = " + addTypes[type] + ",OpenTime = "+ kLineDatas.get(kLineDatas.size() - 3).getTime());
+                Log.e("参数", "Token = " + Variable.getToken() + ",OrganizationCode = " + Variable.getOrganizationCode() + ",ProductCode = " + Variable.getProductCode() + ",KType = " + addTypes[type] + ",OpenTime = " + kLineDatas.get(kLineDatas.size() - 3).getTime());
                 // 执行请求并设置处理服务器响应的类
                 addKLineOriginal.execute(new AddKLineSubscriber(activity, type));
                 // 请求时暂停对K线图触摸事件的处理
@@ -199,6 +212,7 @@ public class RequestHelper {
                 });
             }
         }
+        sp.edit().putLong(Constants.getKLineTypes[type], new Date(System.currentTimeMillis()).getTime()).commit();
     }
 
 }
