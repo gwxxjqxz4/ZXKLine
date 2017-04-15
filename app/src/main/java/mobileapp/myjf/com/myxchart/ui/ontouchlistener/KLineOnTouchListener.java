@@ -49,6 +49,8 @@ public class KLineOnTouchListener implements View.OnTouchListener {
     List<TextView> titles;
     // 每屏数据量
     private int itemNumber;
+    // 用于判断双击、长按事件的子线程可运行对象
+    JudgementRunnable runnable;
 
     private Activity activity;
     private RelativeLayout kLineMainLayout;
@@ -91,9 +93,9 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                     long secondClickTime = new Date(System.currentTimeMillis()).getTime();
                     if (secondClickTime - firstClickTime < 300) {
                         if (!(activity instanceof FullScreenActivity)) {
-                            Intent intent = new Intent(activity, FullScreenActivity.class);
-                            activity.startActivity(intent);
-                            activity.finish();
+//                            Intent intent = new Intent(activity, FullScreenActivity.class);
+//                            activity.startActivity(intent);
+//                            activity.finish();
                         }
                     } else {
                         isFirstClick = false;
@@ -110,23 +112,9 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                 startX = event.getX();
                 startY = event.getY();
                 // 在子线程中等待一定时间以判断是否为长按事件
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            // 等待一秒钟
-                            Thread.sleep(300);
-                            // 若一秒内位置没有显著变化视为长按事件
-                            if (isNoMove) {
-                                // 设置长按状态为true
-                                isLongClick = true;
-                                isJudge = false;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }).start();
+                runnable = new JudgementRunnable();
+                runnable.setxCoordinate(event.getX());
+                new Thread(runnable).start();
                 break;
             case MotionEvent.ACTION_MOVE:
                 // 一秒内任意一次坐标偏离50以上视为非长按事件，未移动状态变量置为false
@@ -141,7 +129,7 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                     RefreshHelper.refreshSecondaryHighLight(activity, kLineRender, event.getX());
                     GlobalViewsUtil.getCover(activity).setAlpha(1);
                     RefreshHelper.refreshCoverView(activity, null, kLineRender, event.getX());
-                    for(TextView textView:titles){
+                    for (TextView textView : titles) {
                         textView.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View v) {
@@ -169,7 +157,7 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                         }
                         scrollX = event.getX();
                         Variable.setScrollStartPosition(scrollPosition);
-                        kLineRender = LocalToView.getKLineRender(activity,kLineDatas);
+                        kLineRender = LocalToView.getKLineRender(activity, kLineDatas);
                         RefreshHelper.refreshMainView(activity, kLineRender);
 
                         int secondaryType = Variable.getSecondaryType();
@@ -188,16 +176,66 @@ public class KLineOnTouchListener implements View.OnTouchListener {
                 RefreshHelper.refreshSecondaryHighLight(activity, null, event.getX());
                 RefreshHelper.refreshCoverView(activity, null, null, 0);
                 GlobalViewsUtil.getCover(activity).setAlpha(0);
-                for(TextView textView:titles){
+                for (TextView textView : titles) {
                     textView.setOnClickListener(new PagerClickListener(activity));
                 }
                 // 初始化各项参数，准备下一次触摸事件
                 isLongClick = false;
                 isNoMove = true;
                 isJudge = false;
+                runnable.setActionExist(false);
                 break;
         }
 
         return false;
     }
+
+    private class JudgementRunnable implements Runnable{
+
+        private boolean isActionExist = true;
+        private float xCoordinate;
+
+        public void setxCoordinate(float x){
+            this.xCoordinate = x;
+        }
+
+        public void setActionExist(boolean actionExist) {
+            isActionExist = actionExist;
+        }
+
+        @Override
+        public void run() {
+            try {
+                // 等待一秒钟
+                Thread.sleep(300);
+                // 若一秒内位置没有显著变化视为长按事件
+                if (isNoMove && isActionExist) {
+                    // 设置长按状态为true
+                    isLongClick = true;
+                    isJudge = false;
+                    activity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            RefreshHelper.refreshMainHighLight(activity, kLineRender, xCoordinate);
+
+                            RefreshHelper.refreshSecondaryHighLight(activity, kLineRender, xCoordinate);
+                            GlobalViewsUtil.getCover(activity).setAlpha(1);
+                            RefreshHelper.refreshCoverView(activity, null, kLineRender, xCoordinate);
+                            for (TextView textView : titles) {
+                                textView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+
+                                    }
+                                });
+                            }
+                        }
+                    });
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 }
