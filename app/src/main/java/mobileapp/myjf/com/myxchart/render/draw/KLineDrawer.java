@@ -15,11 +15,15 @@ import mobileapp.myjf.com.myxchart.utils.calculation.PXUtils;
 import mobileapp.myjf.com.myxchart.utils.global.Variable;
 
 /**
- * Created by yuankai on 17/4/13.
+ * Created by gwx
+ *
+ * 绘制K线的工具类
+ *
  */
 
 public class KLineDrawer {
 
+    // 绘制K线背景
     public static void renderBackground(Canvas canvas, float height, float width, Context context) {
 
         // 声明画笔
@@ -47,6 +51,7 @@ public class KLineDrawer {
 
     }
 
+    // 绘制K线数据，包括蜡烛图、Ma线和日期、文字等
     public static void renderDatas(Canvas canvas, float height, float width, Context context, KLineRender kLineRender) {
         List<KLineItem> kLineItems = kLineRender.getItems();
         // 声明画笔
@@ -59,6 +64,7 @@ public class KLineDrawer {
         paint.setStrokeWidth(PXUtils.dip2px(context, 1));
         // 设置默认颜色为黑色
         paint.setColor(Color.BLACK);
+        // 设置字体大小
         paint.setTextSize(PXUtils.dip2px(context, 9));
         // 遍历所有坐标对象，生成对应的矩形
         for (int i = 0; i < kLineItems.size(); i++) {

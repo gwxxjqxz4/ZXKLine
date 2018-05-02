@@ -7,7 +7,7 @@ import android.os.Bundle;
  * create by gwx
  * K线界面，该界面用于展示K线图与分时线图
  */
-public class KTLineActivity extends Activity {
+public class GoodsDetailActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

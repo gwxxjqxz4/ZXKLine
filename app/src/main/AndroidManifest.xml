@@ -13,16 +13,7 @@
         <activity
             android:name=".ui.FullScreenActivity"
             android:screenOrientation="landscape" />
-        <activity
-            android:name="mobileapp.myjf.com.myxchart.GoodsDetailActivity"
-            android:screenOrientation="portrait" />
-        <activity android:name="mobileapp.myjf.com.myxchart.MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

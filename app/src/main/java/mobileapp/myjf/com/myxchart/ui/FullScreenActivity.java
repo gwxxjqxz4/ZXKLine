@@ -5,14 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import mobileapp.myjf.com.myxchart.GoodsDetailActivity;
 import mobileapp.myjf.com.myxchart.R;
 import mobileapp.myjf.com.myxchart.ui.onclicklistener.PagerClickListener;
 import mobileapp.myjf.com.myxchart.utils.global.GlobalViewsUtil;
@@ -32,7 +31,7 @@ public class FullScreenActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
-        if(actionBar != null){
+        if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setTitle(Variable.getProductName());
@@ -50,7 +49,7 @@ public class FullScreenActivity extends AppCompatActivity {
         if (Variable.getNormalSelectedType() == 0) {
             RequestHelper.getTimeLineDatas(this);
         } else {
-            RequestHelper.getKLineDatas(this,Variable.getNormalSelectedType());
+            RequestHelper.getKLineDatas(this, Variable.getNormalSelectedType());
             GlobalViewsUtil.getTitles(this).get(Variable.getNormalSelectedType()).performClick();
         }
 
@@ -76,12 +75,21 @@ public class FullScreenActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         timer.cancel();
-        Intent intent = new Intent(this,GoodsDetailActivity.class);
-        intent.putExtra("token",Variable.getToken());
-        intent.putExtra("organizationCode",Variable.getOrganizationCode());
-        intent.putExtra("productCode",Variable.getProductCode());
-        intent.putExtra("productName",Variable.getProductName());
-        startActivity(intent);
+
+        try {
+            Class serviceManager = Class.forName("com.example.myxdemo.GoodsDetailActivity");
+            Intent intent = new Intent(this, serviceManager);
+            intent.putExtra("token", Variable.getToken());
+            intent.putExtra("organizationCode", Variable.getOrganizationCode());
+            intent.putExtra("productCode", Variable.getProductCode());
+            intent.putExtra("productName", Variable.getProductName());
+            startActivity(intent);
+        } catch (Exception e) {
+            Log.e("跳转错误","通过类名获取商品详情页面类型失败，请检查类名");
+            e.printStackTrace();
+        }
+
+
         super.onDestroy();
     }
 
@@ -101,7 +109,7 @@ public class FullScreenActivity extends AppCompatActivity {
             if (Variable.getFullSelectedType() == 0) {
                 RequestHelper.getTimeLineDatas(FullScreenActivity.this);
             } else {
-                RequestHelper.getKLineDatas(FullScreenActivity.this,Variable.getFullSelectedType());
+                RequestHelper.getKLineDatas(FullScreenActivity.this, Variable.getFullSelectedType());
             }
         }
     };

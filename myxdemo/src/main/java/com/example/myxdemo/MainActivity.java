@@ -15,10 +15,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToKLine(View v){
-        Intent intent = new Intent(this,KTLineActivity.class);
+        Intent intent = new Intent(this,GoodsDetailActivity.class);
         intent.putExtra("token","IOSMOBILECLIENT");
         intent.putExtra("organizationCode","QL");
         intent.putExtra("productCode","QLOIL10T");
+        intent.putExtra("productName","重油10T");
         startActivity(intent);
 
     }
