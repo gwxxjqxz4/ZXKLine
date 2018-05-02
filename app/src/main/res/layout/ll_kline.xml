@@ -38,17 +38,17 @@
         android:layout_weight="60"
         android:clickable="false">
 
-        <mobileapp.myjf.com.myxchart.render.data.KLineView
+        <mobileapp.zixiao.com.zxchart.render.data.KLineView
             android:id="@+id/view_kline"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <mobileapp.myjf.com.myxchart.render.background.KLineBackgroundView
+        <mobileapp.zixiao.com.zxchart.render.background.KLineBackgroundView
             android:id="@+id/background_kline"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <mobileapp.myjf.com.myxchart.render.highlight.KLineHighLightView
+        <mobileapp.zixiao.com.zxchart.render.highlight.KLineHighLightView
             android:id="@+id/highlight_kline"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
@@ -151,17 +151,17 @@
         android:layout_weight="24"
         android:clickable="false">
 
-        <mobileapp.myjf.com.myxchart.render.data.SecondaryView
+        <mobileapp.zixiao.com.zxchart.render.data.SecondaryView
             android:id="@+id/view_secondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <mobileapp.myjf.com.myxchart.render.background.SecondaryBackgroundView
+        <mobileapp.zixiao.com.zxchart.render.background.SecondaryBackgroundView
             android:id="@+id/background_secondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <mobileapp.myjf.com.myxchart.render.highlight.SecondaryHighLight
+        <mobileapp.zixiao.com.zxchart.render.highlight.SecondaryHighLight
             android:id="@+id/highlight_secondary"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />

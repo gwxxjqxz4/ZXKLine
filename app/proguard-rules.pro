@@ -156,7 +156,7 @@
 
 #-----------处理实体类---------------
 # 在开发的时候我们可以将所有的实体类放在一个包内，这样我们写一次混淆就行了。
--keep public class mobileapp.myjf.com.myxchart.entity.** {
+-keep public class mobileapp.zixiao.com.zxchart.entity.** {
     public void set*(***);
     public *** get*();
     public *** is*();
@@ -201,7 +201,7 @@ public static java.lang.String TABLENAME;
 }
 -keep class **$Properties
 
--keep class mobileapp.myjf.com.myxchart.greendao.gen.**
+-keep class mobileapp.zixiao.com.zxchart.greendao.gen.**
 
 # log4j
 -keep class com.orhanobut.logger.**{*;}

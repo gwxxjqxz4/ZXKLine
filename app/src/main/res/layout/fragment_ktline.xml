@@ -22,7 +22,7 @@
 
         </HorizontalScrollView>
 
-        <mobileapp.myjf.com.myxchart.render.CoverView
+        <mobileapp.zixiao.com.zxchart.render.CoverView
             android:id="@+id/view_cover"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -50,17 +50,17 @@
             android:padding="10dp"
             android:visibility="visible">
 
-            <mobileapp.myjf.com.myxchart.render.highlight.TimeLineHighLightView
+            <mobileapp.zixiao.com.zxchart.render.highlight.TimeLineHighLightView
                 android:id="@+id/highlight_time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <mobileapp.myjf.com.myxchart.render.data.TimeLineView
+            <mobileapp.zixiao.com.zxchart.render.data.TimeLineView
                 android:id="@+id/view_time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 
-            <mobileapp.myjf.com.myxchart.render.background.TimeLineBackgroundView
+            <mobileapp.zixiao.com.zxchart.render.background.TimeLineBackgroundView
                 android:id="@+id/background_time"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
