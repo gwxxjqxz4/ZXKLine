@@ -58,8 +58,8 @@ public class KTLineFragment extends Fragment {
         if (Variable.getFullSelectedType() == 0) {
             RequestHelper.getTimeLineDatas(getActivity());
         } else {
-            RequestHelper.getKLineDatas(getActivity(), Variable.getFullSelectedType());
             GlobalViewsUtil.getTitles(getActivity()).get(Variable.getFullSelectedType()).performClick();
+            RequestHelper.getKLineDatas(getActivity(), Variable.getFullSelectedType());
         }
 
         initFullScreenButton();

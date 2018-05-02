@@ -14,6 +14,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import mobileapp.zixiao.com.zxchart.ui.onclicklistener.PagerClickListener;
+import mobileapp.zixiao.com.zxchart.utils.draw.DrawKLine;
+import mobileapp.zixiao.com.zxchart.utils.draw.DrawSecondary;
 import mobileapp.zixiao.com.zxchart.utils.global.GlobalViewsUtil;
 import mobileapp.zixiao.com.zxchart.utils.global.Variable;
 import mobileapp.zixiao.com.zxchart.utils.other.RequestHelper;
@@ -50,8 +52,8 @@ public class FullScreenActivity extends AppCompatActivity {
         if (Variable.getNormalSelectedType() == 0) {
             RequestHelper.getTimeLineDatas(this);
         } else {
-            RequestHelper.getKLineDatas(this, Variable.getNormalSelectedType());
             GlobalViewsUtil.getTitles(this).get(Variable.getNormalSelectedType()).performClick();
+            RequestHelper.getKLineDatas(this, Variable.getNormalSelectedType());
         }
 
         timer = new Timer();
@@ -86,7 +88,7 @@ public class FullScreenActivity extends AppCompatActivity {
             intent.putExtra("productName", Variable.getProductName());
             startActivity(intent);
         } catch (Exception e) {
-            Log.e("跳转错误","通过类名获取商品详情页面类型失败，请检查类名");
+            Log.e("跳转错误", "通过类名获取商品详情页面类型失败，请检查类名");
             e.printStackTrace();
         }
 

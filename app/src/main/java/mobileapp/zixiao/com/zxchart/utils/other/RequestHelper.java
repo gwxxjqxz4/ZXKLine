@@ -8,9 +8,22 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import mobileapp.zixiao.com.zxchart.data.KLineTestData;
+import mobileapp.zixiao.com.zxchart.entity.originaldata.KLineOriginal;
 import mobileapp.zixiao.com.zxchart.net.domain.AddKLineOriginal;
 import mobileapp.zixiao.com.zxchart.net.domain.AddTimeLineOriginal;
 import mobileapp.zixiao.com.zxchart.net.domain.GetKLineOriginal;
@@ -20,6 +33,7 @@ import mobileapp.zixiao.com.zxchart.entity.util.KLineData;
 import mobileapp.zixiao.com.zxchart.net.subscriber.AddKLineSubscriber;
 import mobileapp.zixiao.com.zxchart.net.subscriber.AddTimeLineSubscriber;
 import mobileapp.zixiao.com.zxchart.ui.FullScreenActivity;
+import mobileapp.zixiao.com.zxchart.utils.calculation.OriginalToLocal;
 import mobileapp.zixiao.com.zxchart.utils.draw.DrawKLine;
 import mobileapp.zixiao.com.zxchart.utils.draw.DrawSecondary;
 import mobileapp.zixiao.com.zxchart.net.subscriber.GetKLineSubscriber;
@@ -125,7 +139,7 @@ public class RequestHelper {
      *
      * @param activity 上下文对象
      */
-    public static void getKLineDatas(final Activity activity, int type) {
+    public static void getKLineDatas(final Activity activity, final int type) {
         if (activity instanceof FullScreenActivity) {
             Variable.setFullSelectedType(type);
         } else {
@@ -142,76 +156,109 @@ public class RequestHelper {
         // 从数据库中获取本地缓存的对应类型K线数据
         final List<KLineData> kLineDatas = KLineManager.queryKLineDatas(activity, getTypes[type]);
         // 如果数据库中没有该类数据或条目数量为0则直接请求旧接口插入数据
-        if (kLineDatas == null || kLineDatas.size() < 3) {
-            // 构造请求对象
-            GetKLineOriginal getKLineList = new GetKLineOriginal();
-            // 设置图表类型
-            getKLineList.setType(getTypes[type]);
-            // 设置机构代码
-            getKLineList.setSyncOrgCode(Variable.getOrganizationCode());
-            // 设置商品代码
-            getKLineList.setProductCode(Variable.getProductCode());
-            // 执行请求并设置处理服务器响应的类
-            getKLineList.execute(new GetKLineSubscriber(activity, type));
-            // 请求数据时暂时停止对K线布局触摸事件的响应
-            kLineLayout.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    return false;
+
+        // 开启一个子线程来处理数据以保证流畅性
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                // 将网络中请求到的数据转换成适于保存和操作的本地数据并缓
+                Gson gson = new GsonBuilder().excludeFieldsWithModifiers(Modifier.FINAL, Modifier.TRANSIENT, Modifier.STATIC)
+                        .registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+                            @Override
+                            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context)
+                                    throws JsonParseException {
+
+                                try {
+                                    return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(json.getAsString());
+                                } catch (ParseException e) {
+                                    return null;
+                                }
+                            }
+                        }).create();
+                KLineOriginal kLineOriginal = gson.fromJson(KLineTestData.testData.trim(), KLineOriginal.class);
+                List<KLineData> kLineDatas = OriginalToLocal.getKLineLocal(kLineOriginal, type);
+                // 将数据缓存到数据库中
+                if (kLineDatas == null || kLineDatas.size() < 3) {
+                    KLineManager.writeKLineDatas(activity, kLineDatas);
                 }
-            });
-        } else {
-            // 若数据库中有昨天的数据则清除数据库并请求网络
-            if (StampJudgement.isYesterdayData(timeStamp)) {
-                // 清理数据库中的全部数据
-                KLineManager.deleteAllDatas(activity);
-                // 构造请求对象
-                GetKLineOriginal getKLineList = new GetKLineOriginal();
-                // 设置图表类型
-                getKLineList.setType(getTypes[type]);
-                // 设置机构代码
-                getKLineList.setSyncOrgCode(Variable.getOrganizationCode());
-                // 设置商品代码
-                getKLineList.setProductCode(Variable.getProductCode());
-                // 执行请求并设置处理服务器响应的类
-                getKLineList.execute(new GetKLineSubscriber(activity, type));
-                // 请求时暂停对K线图触摸事件的处理
-                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return false;
-                    }
-                });
+                // 从数据库中读取数据
+                List<KLineData> dbKLineDatas = KLineManager.queryKLineDatas(activity, Constants.getKLineTypes[type]);
+                // 绘制K线图及副图（绘制方法中包含了页面切换监测，决定是否显示新数据）
+                DrawKLine.drawKLine(activity, dbKLineDatas, type);
+                DrawSecondary.drawSecondary(activity, dbKLineDatas, type);
             }
-            // 若数据库中只有今天的数据则请求新接口并添加数据,并优先将已有数据渲染
-            else {
-                // 调用工具方法将数据库中的数据先渲染在界面上
-                DrawKLine.drawKLine(activity, kLineDatas, type);
-                DrawSecondary.drawSecondary(activity, kLineDatas, type);
-                // 构造请求对象
-                AddKLineOriginal addKLineOriginal = new AddKLineOriginal();
-                // 设置请求令牌
-                addKLineOriginal.setToken(Variable.getToken());
-                // 设置机构代码
-                addKLineOriginal.setOrganizationCode(Variable.getOrganizationCode());
-                // 设置商品代码
-                addKLineOriginal.setProductCode(Variable.getProductCode());
-                // 设置图表类型（要用新的接口字段）
-                addKLineOriginal.setType(addTypes[type]);
-                // 设置请求时间戳（数据库中本类数据倒数第二条的时间戳）
-                addKLineOriginal.setOpenTime(kLineDatas.get(kLineDatas.size() - 3).getTime());
-                Log.e("参数", "Token = " + Variable.getToken() + ",OrganizationCode = " + Variable.getOrganizationCode() + ",ProductCode = " + Variable.getProductCode() + ",KType = " + addTypes[type] + ",OpenTime = " + kLineDatas.get(kLineDatas.size() - 3).getTime());
-                // 执行请求并设置处理服务器响应的类
-                addKLineOriginal.execute(new AddKLineSubscriber(activity, type));
-                // 请求时暂停对K线图触摸事件的处理
-                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent event) {
-                        return false;
-                    }
-                });
-            }
-        }
+        }).start();
+
+//        if (kLineDatas == null || kLineDatas.size() < 3) {
+//            // 构造请求对象
+//            GetKLineOriginal getKLineList = new GetKLineOriginal();
+//            // 设置图表类型
+//            getKLineList.setType(getTypes[type]);
+//            // 设置机构代码
+//            getKLineList.setSyncOrgCode(Variable.getOrganizationCode());
+//            // 设置商品代码
+//            getKLineList.setProductCode(Variable.getProductCode());
+//            // 执行请求并设置处理服务器响应的类
+//            getKLineList.execute(new GetKLineSubscriber(activity, type));
+//            // 请求数据时暂时停止对K线布局触摸事件的响应
+//            kLineLayout.setOnTouchListener(new View.OnTouchListener() {
+//                @Override
+//                public boolean onTouch(View v, MotionEvent event) {
+//                    return false;
+//                }
+//            });
+//        } else {
+//            // 若数据库中有昨天的数据则清除数据库并请求网络
+//            if (StampJudgement.isYesterdayData(timeStamp)) {
+//                // 清理数据库中的全部数据
+//                KLineManager.deleteAllDatas(activity);
+//                // 构造请求对象
+//                GetKLineOriginal getKLineList = new GetKLineOriginal();
+//                // 设置图表类型
+//                getKLineList.setType(getTypes[type]);
+//                // 设置机构代码
+//                getKLineList.setSyncOrgCode(Variable.getOrganizationCode());
+//                // 设置商品代码
+//                getKLineList.setProductCode(Variable.getProductCode());
+//                // 执行请求并设置处理服务器响应的类
+//                getKLineList.execute(new GetKLineSubscriber(activity, type));
+//                // 请求时暂停对K线图触摸事件的处理
+//                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        return false;
+//                    }
+//                });
+//            }
+//            // 若数据库中只有今天的数据则请求新接口并添加数据,并优先将已有数据渲染
+//            else {
+//                // 调用工具方法将数据库中的数据先渲染在界面上
+//                DrawKLine.drawKLine(activity, kLineDatas, type);
+//                DrawSecondary.drawSecondary(activity, kLineDatas, type);
+//                // 构造请求对象
+//                AddKLineOriginal addKLineOriginal = new AddKLineOriginal();
+//                // 设置请求令牌
+//                addKLineOriginal.setToken(Variable.getToken());
+//                // 设置机构代码
+//                addKLineOriginal.setOrganizationCode(Variable.getOrganizationCode());
+//                // 设置商品代码
+//                addKLineOriginal.setProductCode(Variable.getProductCode());
+//                // 设置图表类型（要用新的接口字段）
+//                addKLineOriginal.setType(addTypes[type]);
+//                // 设置请求时间戳（数据库中本类数据倒数第二条的时间戳）
+//                addKLineOriginal.setOpenTime(kLineDatas.get(kLineDatas.size() - 3).getTime());
+//                Log.e("参数", "Token = " + Variable.getToken() + ",OrganizationCode = " + Variable.getOrganizationCode() + ",ProductCode = " + Variable.getProductCode() + ",KType = " + addTypes[type] + ",OpenTime = " + kLineDatas.get(kLineDatas.size() - 3).getTime());
+//                // 执行请求并设置处理服务器响应的类
+//                addKLineOriginal.execute(new AddKLineSubscriber(activity, type));
+//                // 请求时暂停对K线图触摸事件的处理
+//                kLineLayout.setOnTouchListener(new View.OnTouchListener() {
+//                    @Override
+//                    public boolean onTouch(View v, MotionEvent event) {
+//                        return false;
+//                    }
+//                });
+//            }
+//        }
         sp.edit().putLong(Constants.getKLineTypes[type], new Date(System.currentTimeMillis()).getTime()).commit();
     }
 
